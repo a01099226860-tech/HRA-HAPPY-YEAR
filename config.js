@@ -6,8 +6,8 @@ window.EVENT = {
   capacity: 50,   // 최대 수용 인원
   eventDay: "2026-12-26",  // 당일에는 프로그램 페이지에서 지금 순서를 표시
 
-  // 배경음악: 유튜브 공식 플레이어로 재생 (영상 ID)
-  bgm: { youtubeId: "UuPb1J_RCJM", title: "Prologue", artist: "John Williams" },
+  // 배경음악 파일 (assets 폴더)
+  bgm: { src: "assets/bgm.mp3", title: "해리포터 BGM" },
 
   // 구글 Apps Script 웹앱 URL (README 참고). 비워두면 체험 모드(이 브라우저에만 저장).
   scriptUrl: "https://script.google.com/macros/s/AKfycbzb22fjmIl93rg7W-cFHu2DV2LxChaXsgjqWDxzGhbpg8wtzPa-YoP2SN-eBWDR0DKI/exec",

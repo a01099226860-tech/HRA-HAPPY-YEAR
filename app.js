@@ -189,51 +189,31 @@
   });
   window.addEventListener("popstate", () => go(location.href, false));
 
-  /* ================= 배경음악 (유튜브 공식 플레이어) ================= */
+  /* ================= 배경음악 (mp3, 켜기/끄기 버튼) ================= */
   const music = (() => {
-    const box = $("#music"), btn = $("#music-btn");
-    const id = E.bgm && E.bgm.youtubeId;
-    if (!id) { box.remove(); return { play() {} }; }
-    $(".music-meta").innerHTML = `♪ <b>${E.bgm.title}</b> · ${E.bgm.artist}`;
+    const box = $("#music"), btn = $("#music-btn"), audio = $("#bgm");
+    if (!E.bgm || !E.bgm.src || !audio) { box && box.remove(); return { play() {} }; }
+    audio.src = E.bgm.src;
+    audio.volume = 0.45;
+    btn.title = `${E.bgm.title}${E.bgm.artist ? " · " + E.bgm.artist : ""}`;
 
-    let player = null, ready = false, want = false, playing = false, hideTimer;
-    const peek = (ms = 5000) => {
-      box.classList.add("expanded");
-      clearTimeout(hideTimer);
-      hideTimer = setTimeout(() => box.classList.remove("expanded"), ms);
-    };
+    // 새로고침·직접 접속 시 이어서 재생할 위치
+    audio.addEventListener("loadedmetadata", () => {
+      const t = +store.get("bgm-time") || 0;
+      if (t && t < audio.duration) audio.currentTime = t;
+    }, { once: true });
+    audio.addEventListener("play", () => { box.classList.add("playing"); store.set("bgm", "on"); label("BGM 끄기"); });
+    audio.addEventListener("pause", () => { box.classList.remove("playing"); label("BGM 켜기"); });
+    setInterval(() => { if (!audio.paused) store.set("bgm-time", audio.currentTime); }, 2000);
 
-    window.onYouTubeIframeAPIReady = () => {
-      player = new YT.Player("yt", {
-        videoId: id,
-        playerVars: { loop: 1, playlist: id, playsinline: 1, rel: 0, modestbranding: 1,
-                      start: Math.floor(+store.get("bgm-time") || 0) },
-        events: {
-          onReady: () => { ready = true; player.setVolume(45); if (want) player.playVideo(); },
-          onStateChange: e => {
-            playing = e.data === YT.PlayerState.PLAYING;
-            box.classList.toggle("playing", playing);
-            if (e.data === YT.PlayerState.PLAYING) store.set("bgm", "on");
-            if (e.data === YT.PlayerState.PAUSED) store.set("bgm", "off");
-          },
-        },
-      });
-    };
-    const s = document.createElement("script");
-    s.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(s);
-
-    setInterval(() => { if (ready && playing) store.set("bgm-time", player.getCurrentTime()); }, 2000);
-
-    function play() { want = true; if (ready) player.playVideo(); peek(); }
+    function label(t) { $(".music-label").textContent = t; }
+    function play() { audio.play().catch(() => {}); }
     btn.addEventListener("click", () => {
-      if (playing) { player.pauseVideo(); want = false; peek(2500); }
-      else play();
+      if (audio.paused) play();
+      else { audio.pause(); store.set("bgm", "off"); }
     });
     // 이전 페이지에서 듣고 있었다면 안내 (브라우저 정책상 자동재생은 불가)
-    if (store.get("bgm") === "on") $(".music-label").textContent = "음악 이어듣기";
-    box.addEventListener("mouseenter", () => { clearTimeout(hideTimer); box.classList.add("expanded"); });
-    box.addEventListener("mouseleave", () => peek(1200));
+    label(store.get("bgm") === "on" ? "BGM 이어듣기" : "BGM 켜기");
     return { play };
   })();
 
@@ -266,7 +246,9 @@
       music.play(); // 봉인을 누르는 순간 음악 시작
       env.classList.add("open");
       store.set("opened", "1");
-      setTimeout(() => { reveal(); $("#letter", main).scrollIntoView({ behavior: "smooth", block: "start" }); }, 1100);
+      // 덮개 열림 → 편지지 올라옴 → 봉투가 사라지고 초대장 등장
+      setTimeout(() => env.classList.add("fade"), 1150);
+      setTimeout(() => { reveal(); $("#letter", main).scrollIntoView({ behavior: "smooth", block: "start" }); }, 1500);
     };
     env.addEventListener("click", open);
     env.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
