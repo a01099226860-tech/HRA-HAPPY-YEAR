@@ -9,13 +9,13 @@
 
   // 기숙사: 문장 색 (배경, 테두리, 물결 3겹, 동물)
   const HOUSES = {
-    g: { name: "그리핀도르", en: "GRYFFINDOR", trait: "용기 · 대담함", color: "#8f3337",
+    g: { name: "그리핀도르", en: "GRYFFINDOR", trait: "용기 · 대담함", desc: "망설임 없이 먼저 나서는 사람들. 위기에도 웃으며 앞장서는 용감한 마법사의 집.", color: "#8f3337",
          pal: ["#8f3337", "#f8c9a0", "#b23a3a", "#d4584c", "#ec8a6c", "#fde3c4"] },
-    r: { name: "래번클로", en: "RAVENCLAW", trait: "지혜 · 재치", color: "#26246a",
+    r: { name: "래번클로", en: "RAVENCLAW", trait: "지혜 · 재치", desc: "배움과 호기심을 사랑하는 사람들. 번뜩이는 아이디어로 길을 찾는 현명한 마법사의 집.", color: "#26246a",
          pal: ["#26246a", "#b3bcff", "#2f2f86", "#4350b8", "#6573dc", "#e3e6ff"] },
-    h: { name: "후플푸프", en: "HUFFLEPUFF", trait: "성실 · 의리", color: "#8a6233",
+    h: { name: "후플푸프", en: "HUFFLEPUFF", trait: "성실 · 의리", desc: "묵묵히 끝까지 함께하는 사람들. 따뜻한 마음과 의리로 모두를 챙기는 마법사의 집.", color: "#8a6233",
          pal: ["#8a6233", "#f6dd92", "#9c733b", "#b88d45", "#d5ad5c", "#fff0bf"] },
-    s: { name: "슬리데린", en: "SLYTHERIN", trait: "야망 · 지략", color: "#22646a",
+    s: { name: "슬리데린", en: "SLYTHERIN", trait: "야망 · 지략", desc: "목표를 향해 영리하게 나아가는 사람들. 큰 꿈과 지략으로 판을 읽는 마법사의 집.", color: "#22646a",
          pal: ["#22646a", "#95ecd9", "#1f7a78", "#2a9c92", "#46c2b0", "#d6fff5"] },
   };
 
@@ -55,9 +55,9 @@
     $$("[data-crests]", main).forEach(box => {
       const big = box.dataset.crests === "big";
       box.innerHTML = Object.keys(HOUSES).map(k => `
-        <figure class="crest-card">
+        <figure class="crest-card" title="${HOUSES[k].name} · ${HOUSES[k].desc}">
           ${crest(k)}
-          <figcaption><b>${HOUSES[k].en}</b>${big ? `<span>${HOUSES[k].name} · ${HOUSES[k].trait}</span>` : `<span>${HOUSES[k].name}</span>`}</figcaption>
+          <figcaption><b>${HOUSES[k].en}</b>${big ? `<span>${HOUSES[k].name} · ${HOUSES[k].trait}</span><p class="crest-desc">${HOUSES[k].desc}</p>` : `<span>${HOUSES[k].name}</span>`}</figcaption>
         </figure>`).join("");
     });
   }
@@ -98,6 +98,31 @@
       if (!out.ok) throw new Error(out.error || "저장 실패");
       return out;
     },
+    // 공개용: 숫자만 (이름·편지 내용은 운영단 페이지에서만)
+    async summary(kind) {
+      const d = await api.list(kind);
+      if (!Array.isArray(d)) return d;
+      if (kind === "rsvp") return {
+        attend: d.filter(r => r.attend === "참석").length,
+        total: d.length,
+        siren: d.filter(r => r.siren === "참여" && r.attend !== "불참").length,
+      };
+      return { count: d.length };
+    },
+    // 운영단용: 비밀번호 확인 후 전체 데이터
+    async admin(key) {
+      if (demo) return {
+        ok: true,
+        rsvp: JSON.parse(localStorage.getItem("hp-rsvp") || "[]"),
+        letters: JSON.parse(localStorage.getItem("hp-letters") || "[]"),
+      };
+      const res = await fetch(E.scriptUrl, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ kind: "admin", key }),
+      });
+      return res.json();
+    },
   };
 
   /* ================= 배경 효과 ================= */
@@ -130,7 +155,7 @@
   }
 
   /* ================= 페이지 이동 (음악이 끊기지 않게 본문만 교체) ================= */
-  const inits = { home: initHome, rsvp: initRsvp, program: initProgram, letters: initLetters };
+  const inits = { home: initHome, rsvp: initRsvp, program: initProgram, letters: initLetters, admin: initAdmin };
 
   function setActive(page) {
     $$(".nav a").forEach(a => a.classList.toggle("active", a.dataset.key === page));
@@ -254,7 +279,7 @@
     env.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
   }
 
-  /* ================= 대연회장: 참석 신청 (기숙사는 준비위원회가 랜덤 배정) ================= */
+  /* ================= 대연회장: 참석 신청 (기숙사는 운영단이 랜덤 배정) ================= */
   function initRsvp(main) {
     $("#rsvp-form", main).addEventListener("submit", async e => {
       e.preventDefault();
@@ -263,51 +288,30 @@
       data.name = data.name.trim();
       btn.disabled = true; msg.textContent = "부엉이가 날아가는 중...";
       try {
-        // 정원 확인: 새로 '참석'하는 사람만 막고, 이미 참석으로 낸 사람의 수정은 허용
-        if (E.capacity && data.attend === "참석") {
-          const list = await api.list("rsvp");
-          const already = list.some(r => r.name === data.name && r.attend === "참석");
-          if (!already && list.filter(r => r.attend === "참석").length >= E.capacity) {
-            msg.textContent = `⚠ 정원(${E.capacity}명)이 모두 찼어요. 준비위원회에 문의해주세요.`;
-            return;
-          }
-        }
-        await api.add("rsvp", data);
+        await api.add("rsvp", data); // 정원 확인은 시트 스크립트가 함
         flyLetter();
         msg.textContent = `✔ ${data.name}님의 회신이 도착했어요! 같은 이름으로 다시 보내면 수정됩니다.`;
         f.reset();
         loadRsvp(main);
-      } catch {
-        msg.textContent = "⚠ 전송에 실패했어요. 잠시 후 다시 시도해주세요.";
+      } catch (err) {
+        msg.textContent = err.message === "full"
+          ? `⚠ 정원(${E.capacity}명)이 모두 찼어요. 운영단에 문의해주세요.`
+          : "⚠ 전송에 실패했어요. 잠시 후 다시 시도해주세요.";
       } finally { btn.disabled = false; }
     });
     loadRsvp(main);
   }
 
   async function loadRsvp(main) {
-    let list;
-    try { list = await api.list("rsvp"); }
+    let s;
+    try { s = await api.summary("rsvp"); }
     catch { $("#rsvp-stats", main).innerHTML = `<p class="empty">현황을 불러오지 못했어요.</p>`; return; }
     if (!main.isConnected) return;
-    const yes = list.filter(r => r.attend === "참석");
-    const siren = list.filter(r => r.siren === "참여" && r.attend !== "불참");
-    const cap = E.capacity, full = cap && yes.length >= cap;
+    const cap = s.capacity || E.capacity, full = cap && s.attend >= cap;
     $("#rsvp-stats", main).innerHTML = `
-      <div class="stat${full ? " full" : ""}"><b>${yes.length}${cap ? `<small> / ${cap}</small>` : ""}</b><small>${full ? "정원 마감" : "참석"}</small></div>
-      <div class="stat"><b>${list.length}</b><small>회신</small></div>
-      <div class="stat"><b>${siren.length}</b><small>세이렌 참여</small></div>`;
-
-    // 시트의 '기숙사' 칸을 준비위원회가 채우면 이름표 색이 바뀜
-    const ul = $("#guest-list", main);
-    ul.innerHTML = "";
-    if (!list.length) { ul.innerHTML = `<li class="empty">아직 도착한 부엉이가 없어요.</li>`; return; }
-    list.forEach(r => {
-      const li = document.createElement("li");
-      if (HOUSES[r.house]) li.style.background = HOUSES[r.house].color;
-      if (r.attend === "불참") li.classList.add("no");
-      li.textContent = r.name + (r.attend === "미정" ? " (미정)" : "");
-      ul.appendChild(li);
-    });
+      <div class="stat${full ? " full" : ""}"><b>${s.attend}${cap ? `<small> / ${cap}</small>` : ""}</b><small>${full ? "정원 마감" : "참석"}</small></div>
+      <div class="stat"><b>${s.total}</b><small>회신</small></div>
+      <div class="stat"><b>${s.siren}</b><small>세이렌 참여</small></div>`;
   }
 
   /* ================= 마법 지도: 프로그램 ================= */
@@ -349,7 +353,7 @@
     });
   }
 
-  /* ================= 부엉이 탑: 롤링페이퍼 ================= */
+  /* ================= 부엉이 탑: 롤링페이퍼 (내용은 운영단만 열람) ================= */
   function initLetters(main) {
     const ta = $("textarea", main);
     ta.addEventListener("input", () => ($("#msg-count", main).textContent = ta.value.length));
@@ -366,7 +370,7 @@
       try {
         await api.add("letters", data);
         flyLetter();
-        msg.textContent = "✔ 편지가 교수님 우편함에 도착했어요!";
+        msg.textContent = "✔ 편지가 봉인되어 운영단에게 전달됐어요. 송년회 날 교수님께 전해드릴게요!";
         f.reset(); $("#msg-count", main).textContent = "0";
         loadLetters(main);
       } catch {
@@ -377,25 +381,82 @@
   }
 
   async function loadLetters(main) {
-    const wall = $("#letter-wall", main);
-    let list;
-    try { list = await api.list("letters"); }
-    catch { wall.innerHTML = `<p class="empty">편지를 불러오지 못했어요.</p>`; return; }
+    let s;
+    try { s = await api.summary("letters"); } catch { return; }
     if (!main.isConnected) return;
-    $("#letter-count", main).textContent = list.length ? `· ${list.length}통` : "";
+    $("#letter-count", main).textContent = s.count;
+  }
+
+  /* ================= 운영단 페이지 (비밀번호 필요) ================= */
+  function initAdmin(main) {
+    const form = $("#admin-form", main), msg = $("#admin-msg", main);
+    const show = d => {
+      form.hidden = true;
+      $("#admin-body", main).hidden = false;
+      renderAdmin(main, d);
+    };
+    async function login(key) {
+      msg.textContent = "확인하는 중...";
+      try {
+        const d = await api.admin(key);
+        if (!d.ok) { msg.textContent = "⚠ " + (d.error || "비밀번호가 맞지 않아요"); store.set("admin-key", ""); return; }
+        store.set("admin-key", key);
+        msg.textContent = "";
+        show(d);
+      } catch {
+        msg.textContent = "⚠ 불러오지 못했어요. 잠시 후 다시 시도해주세요.";
+      }
+    }
+    form.addEventListener("submit", e => { e.preventDefault(); login(form.key.value); });
+    $("#admin-refresh", main).addEventListener("click", () => login(store.get("admin-key")));
+    $("#admin-logout", main).addEventListener("click", () => {
+      store.set("admin-key", "");
+      form.hidden = false; form.reset();
+      $("#admin-body", main).hidden = true;
+    });
+    if (demo) login("");
+    else if (store.get("admin-key")) login(store.get("admin-key"));
+  }
+
+  function renderAdmin(main, d) {
+    const rsvp = d.rsvp || [], letters = d.letters || [];
+    const yes = rsvp.filter(r => r.attend === "참석");
+    $("#admin-stats", main).innerHTML = `
+      <div class="stat"><b>${yes.length}<small> / ${d.capacity || E.capacity}</small></b><small>참석</small></div>
+      <div class="stat"><b>${rsvp.filter(r => r.attend === "미정").length}</b><small>미정</small></div>
+      <div class="stat"><b>${rsvp.filter(r => r.attend === "불참").length}</b><small>불참</small></div>
+      <div class="stat"><b>${rsvp.filter(r => r.siren === "참여" && r.attend !== "불참").length}</b><small>세이렌 참여</small></div>
+      <div class="stat"><b>${letters.length}</b><small>편지</small></div>`;
+
+    const tb = $("#admin-table tbody", main);
+    tb.innerHTML = "";
+    const order = { 참석: 0, 미정: 1, 불참: 2 };
+    rsvp.slice().sort((a, b) => (order[a.attend] ?? 3) - (order[b.attend] ?? 3)).forEach(r => {
+      const tr = document.createElement("tr");
+      [r.name, r.role, r.attend, r.siren, HOUSES[r.house]?.name || "미배정", r.note].forEach(v => {
+        const td = document.createElement("td");
+        td.textContent = v || "";
+        tr.appendChild(td);
+      });
+      if (HOUSES[r.house]) tr.children[4].style.color = HOUSES[r.house].pal[1];
+      tb.appendChild(tr);
+    });
+    if (!rsvp.length) tb.innerHTML = `<tr><td colspan="6" class="empty">아직 회신이 없어요.</td></tr>`;
+
+    const wall = $("#letter-wall", main);
     wall.innerHTML = "";
-    if (!list.length) { wall.innerHTML = `<p class="empty center">첫 번째 편지를 남겨주세요 🦉</p>`; return; }
-    list.slice().reverse().forEach(l => {
-      const d = document.createElement("div");
-      d.className = "note";
-      d.style.setProperty("--band", HOUSES[l.house]?.color || "#7a1f24");
-      d.innerHTML = `<span class="wax"></span>`;
-      d.append(l.message);
+    if (!letters.length) { wall.innerHTML = `<p class="empty center">아직 도착한 편지가 없어요.</p>`; return; }
+    letters.slice().reverse().forEach(l => {
+      const n = document.createElement("div");
+      n.className = "note";
+      n.style.setProperty("--band", HOUSES[l.house]?.color || "#7a1f24");
+      n.innerHTML = `<span class="wax"></span>`;
+      n.append(l.message);
       const s = document.createElement("span");
       s.className = "from";
       s.textContent = "— " + l.from;
-      d.appendChild(s);
-      wall.appendChild(d);
+      n.appendChild(s);
+      wall.appendChild(n);
     });
   }
 
