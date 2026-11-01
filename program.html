@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HRA 2026 송년회 · 프로그램</title>
+  <meta name="description" content="HRA 20기 송년회에 초대합니다. 2026년 12월 26일 제주오픈런." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=5" />
+</head>
+<body data-page="program">
+  <div class="bg" aria-hidden="true"><div class="bg-img"></div><div class="mist"></div><div class="fx"></div></div>
+
+  <header class="topbar">
+    <a href="./" class="brand" data-nav><span class="brand-seal">H</span><span>HRA 2026</span></a>
+    <nav class="nav">
+      <a href="./" data-nav data-key="home">초대장</a>
+      <a href="rsvp.html" data-nav data-key="rsvp">참석 신청</a>
+      <a href="program.html" data-nav data-key="program">프로그램</a>
+      <a href="letters.html" data-nav data-key="letters">롤링페이퍼</a>
+    </nav>
+  </header>
+
+  <main id="page" data-page="program" data-title="HRA 2026 송년회 · 프로그램">
+    <section class="page-hero">
+      <p class="eyebrow">THE MARAUDER'S MAP</p>
+      <h1 class="page-title">마법 지도</h1>
+      <p class="lead">“나는 좋은 일만 할 것을 엄숙히 맹세합니다.” 지도를 펼쳐 오늘 밤을 따라가 보세요.</p>
+    </section>
+    <div class="map-card" id="map-card">
+      <button class="map-open btn gold" id="map-open" type="button">🪄 지도 펼치기</button>
+      <ol class="timeline" id="timeline"></ol>
+    </div>
+  </main>
+
+  <div class="music" id="music">
+    <button class="music-btn" id="music-btn" type="button" aria-label="배경음악 재생/정지">
+      <span class="eq"><i></i><i></i><i></i></span><span class="music-label">BGM</span>
+    </button>
+    <div class="music-panel" id="music-panel">
+      <div id="yt"></div>
+      <p class="music-meta"></p>
+    </div>
+  </div>
+
+  <footer class="foot">Mischief Managed · HRA 20기 <span>· Photos: Unsplash · Music: YouTube</span></footer>
+  <script src="config.js?v=5"></script>
+  <script src="app.js?v=5"></script>
+</body>
+</html>

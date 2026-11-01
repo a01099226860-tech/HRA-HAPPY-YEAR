@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HRA 2026 송년회 · 롤링페이퍼</title>
+  <meta name="description" content="HRA 20기 송년회에 초대합니다. 2026년 12월 26일 제주오픈런." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=5" />
+</head>
+<body data-page="letters">
+  <div class="bg" aria-hidden="true"><div class="bg-img"></div><div class="mist"></div><div class="fx"></div></div>
+
+  <header class="topbar">
+    <a href="./" class="brand" data-nav><span class="brand-seal">H</span><span>HRA 2026</span></a>
+    <nav class="nav">
+      <a href="./" data-nav data-key="home">초대장</a>
+      <a href="rsvp.html" data-nav data-key="rsvp">참석 신청</a>
+      <a href="program.html" data-nav data-key="program">프로그램</a>
+      <a href="letters.html" data-nav data-key="letters">롤링페이퍼</a>
+    </nav>
+  </header>
+
+  <main id="page" data-page="letters" data-title="HRA 2026 송년회 · 롤링페이퍼">
+    <section class="page-hero">
+      <p class="eyebrow">THE OWLERY</p>
+      <h1 class="page-title">부엉이 탑</h1>
+      <p class="lead">교수님께 보내는 부엉이 편지. 송년회 마지막 순서에서 전해드려요.</p>
+    </section>
+    <div class="two-col letters-top">
+      <div class="owl-photo" aria-hidden="true"></div>
+      <div class="card parchment">
+        <h2>편지 쓰기</h2>
+        <form id="letter-form" autocomplete="off">
+          <label>보내는 사람<input name="from" maxlength="20" placeholder="이름 (비워두면 익명)" /></label>
+          <label>편지 내용<textarea name="message" required maxlength="400" rows="6" placeholder="교수님, 한 해 동안 감사했습니다..."></textarea></label>
+          <div class="count"><span id="msg-count">0</span>/400</div>
+          <fieldset>
+            <legend>봉인 색</legend>
+            <div class="houses" id="letter-house"></div>
+          </fieldset>
+          <button class="btn gold" type="submit">🦉 부엉이로 보내기</button>
+          <p class="form-msg" id="letter-msg"></p>
+        </form>
+      </div>
+    </div>
+    <h2 class="section-title">도착한 편지 <span id="letter-count"></span></h2>
+    <div class="letter-wall" id="letter-wall"><p class="empty center">편지를 불러오는 중...</p></div>
+  </main>
+
+  <div class="music" id="music">
+    <button class="music-btn" id="music-btn" type="button" aria-label="배경음악 재생/정지">
+      <span class="eq"><i></i><i></i><i></i></span><span class="music-label">BGM</span>
+    </button>
+    <div class="music-panel" id="music-panel">
+      <div id="yt"></div>
+      <p class="music-meta"></p>
+    </div>
+  </div>
+
+  <footer class="foot">Mischief Managed · HRA 20기 <span>· Photos: Unsplash · Music: YouTube</span></footer>
+  <script src="config.js?v=5"></script>
+  <script src="app.js?v=5"></script>
+</body>
+</html>

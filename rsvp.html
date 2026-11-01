@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HRA 2026 송년회 · 참석 신청</title>
+  <meta name="description" content="HRA 20기 송년회에 초대합니다. 2026년 12월 26일 제주오픈런." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=5" />
+</head>
+<body data-page="rsvp">
+  <div class="bg" aria-hidden="true"><div class="bg-img"></div><div class="mist"></div><div class="fx"></div></div>
+
+  <header class="topbar">
+    <a href="./" class="brand" data-nav><span class="brand-seal">H</span><span>HRA 2026</span></a>
+    <nav class="nav">
+      <a href="./" data-nav data-key="home">초대장</a>
+      <a href="rsvp.html" data-nav data-key="rsvp">참석 신청</a>
+      <a href="program.html" data-nav data-key="program">프로그램</a>
+      <a href="letters.html" data-nav data-key="letters">롤링페이퍼</a>
+    </nav>
+  </header>
+
+  <main id="page" data-page="rsvp" data-title="HRA 2026 송년회 · 참석 신청">
+    <section class="page-hero">
+      <p class="eyebrow">THE GREAT HALL</p>
+      <h1 class="page-title">대연회장</h1>
+      <p class="lead">참석 여부와 세이렌의 멜로디 참여를 부엉이 편으로 알려주세요.</p>
+    </section>
+
+    <div class="two-col">
+      <div class="card parchment">
+        <h2>부엉이 회신</h2>
+        <form id="rsvp-form" autocomplete="off">
+          <label>이름<input name="name" required maxlength="20" placeholder="해리 포터" /></label>
+          <label>구분
+            <select name="role"><option>20기</option><option>교수님</option><option>기타</option></select>
+          </label>
+          <fieldset>
+            <legend>참석 여부</legend>
+            <label class="pill"><input type="radio" name="attend" value="참석" required />참석</label>
+            <label class="pill"><input type="radio" name="attend" value="불참" />불참</label>
+            <label class="pill"><input type="radio" name="attend" value="미정" />미정</label>
+          </fieldset>
+          <fieldset>
+            <legend>세이렌의 멜로디 참여</legend>
+            <label class="pill"><input type="radio" name="siren" value="참여" required />참여할래요</label>
+            <label class="pill"><input type="radio" name="siren" value="관람" />관람만</label>
+          </fieldset>
+          <fieldset>
+            <legend>기숙사</legend>
+            <div class="houses" id="house-picker"></div>
+            <button type="button" class="btn ghost small" id="sort-hat">🎩 분류모자에게 맡기기</button>
+            <p class="hat-say" id="hat-say"></p>
+          </fieldset>
+          <label>한마디 (선택)<input name="note" maxlength="60" placeholder="기대돼요!" /></label>
+          <button class="btn gold" type="submit">회신 보내기</button>
+          <p class="form-msg" id="rsvp-msg"></p>
+        </form>
+      </div>
+
+      <div class="card glass">
+        <h2>오늘 밤의 연회장</h2>
+        <div class="stats" id="rsvp-stats"><p class="empty">부엉이들을 불러오는 중...</p></div>
+        <div class="banners" id="banners"></div>
+        <ul class="guest-list" id="guest-list"></ul>
+      </div>
+    </div>
+  </main>
+
+  <div class="music" id="music">
+    <button class="music-btn" id="music-btn" type="button" aria-label="배경음악 재생/정지">
+      <span class="eq"><i></i><i></i><i></i></span><span class="music-label">BGM</span>
+    </button>
+    <div class="music-panel" id="music-panel">
+      <div id="yt"></div>
+      <p class="music-meta"></p>
+    </div>
+  </div>
+
+  <footer class="foot">Mischief Managed · HRA 20기 <span>· Photos: Unsplash · Music: YouTube</span></footer>
+  <script src="config.js?v=5"></script>
+  <script src="app.js?v=5"></script>
+</body>
+</html>

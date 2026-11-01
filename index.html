@@ -3,142 +3,92 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HRA 20기 송년회</title>
+  <title>HRA 2026 송년회 · 초대장</title>
+  <meta name="description" content="HRA 20기 송년회에 초대합니다. 2026년 12월 26일 제주오픈런." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=4" />
+  <link rel="stylesheet" href="style.css?v=5" />
 </head>
-<body>
-  <div class="stars" aria-hidden="true"></div>
+<body data-page="home">
+  <div class="bg" aria-hidden="true"><div class="bg-img"></div><div class="mist"></div><div class="fx"></div></div>
 
-  <header class="site-header">
-    <div class="crest-row" aria-hidden="true">
-      <span class="crest g">🦁</span><span class="crest h">🦡</span>
-      <span class="owl">🦉</span>
-      <span class="crest r">🦅</span><span class="crest s">🐍</span>
-    </div>
-    <p class="eyebrow">AN INVITATION TO SOMETHING MAGICAL</p>
-    <h1>HRA 2026</h1>
-    <p class="h1-sub">YEAR-END PARTY</p>
-    <p class="sub">마법 같은 밤, 20기의 특별한 이야기가 시작됩니다.</p>
+  <header class="topbar">
+    <a href="./" class="brand" data-nav><span class="brand-seal">H</span><span>HRA 2026</span></a>
+    <nav class="nav">
+      <a href="./" data-nav data-key="home">초대장</a>
+      <a href="rsvp.html" data-nav data-key="rsvp">참석 신청</a>
+      <a href="program.html" data-nav data-key="program">프로그램</a>
+      <a href="letters.html" data-nav data-key="letters">롤링페이퍼</a>
+    </nav>
   </header>
 
-  <nav class="tabs" role="tablist">
-    <button role="tab" class="tab active" data-tab="invite">🦉 초대장</button>
-    <button role="tab" class="tab" data-tab="rsvp">📜 참석 신청</button>
-    <button role="tab" class="tab" data-tab="program">⏳ 프로그램</button>
-    <button role="tab" class="tab" data-tab="letters">✉️ 롤링페이퍼</button>
-  </nav>
+  <main id="page" data-page="home" data-title="HRA 2026 송년회 · 초대장">
+    <section class="hero">
+      <p class="eyebrow">AN INVITATION TO SOMETHING MAGICAL</p>
+      <h1>HRA 2026</h1>
+      <p class="h1-sub">YEAR-END PARTY</p>
+      <p class="lead">마법 같은 밤, 20기의 특별한 이야기가 시작됩니다.</p>
+    </section>
 
-  <div id="demo-banner" class="demo-banner" hidden>
-    지금은 <b>체험 모드</b>예요. 입력한 내용이 이 브라우저에만 저장됩니다. 구글 시트를 연결하면 모두에게 공유돼요 (README 참고).
-  </div>
-
-  <main>
-    <!-- 초대장 -->
-    <section id="invite" class="panel active" role="tabpanel">
-      <div class="envelope" id="envelope" tabindex="0" role="button" aria-label="초대장 열기">
+    <section class="invite">
+      <div class="envelope" id="envelope" tabindex="0" role="button" aria-label="봉인을 눌러 초대장 열기">
         <div class="env-back"></div>
         <div class="peek"></div>
         <div class="env-front"></div>
         <div class="env-flap"></div>
-        <div class="seal">H</div>
+        <div class="seal"><span>H</span></div>
         <p class="env-to">To. HRA 20기 &amp; Professor</p>
-        <p class="tap-hint">✦ 봉인을 눌러 초대장을 열어보세요</p>
       </div>
-      <div class="letter" id="letter" hidden>
-          <p class="letter-head">HOGWARTS SCHOOL of HRA</p>
-          <p class="letter-title">송년회 초대장</p>
-          <p>친애하는 <b>20기 동기 여러분</b>과 <b>교수님</b>께,</p>
-          <p>한 해 동안 함께 마법을 익혀 온 여러분을<br/>호그와트 대연회장의 송년회에 초대합니다.</p>
-          <dl class="info">
-            <dt>일시</dt><dd id="inv-date"></dd>
-            <dt>장소</dt><dd><span id="inv-place"></span> <a id="inv-map" class="map-link" target="_blank" rel="noopener">지도 보기</a></dd>
-            <dt>준비물</dt><dd>웃는 얼굴, 그리고 노래 한 소절 🎵</dd>
-          </dl>
-          <p class="sign">부엉이 우편으로 회신 바랍니다.<br/><span>— 20기 송년회 준비위원회</span></p>
-          <button class="btn gold" data-goto="rsvp">참석 회신 보내기 →</button>
-      </div>
+      <p class="tap-hint" id="tap-hint">✦ 봉인을 눌러 초대장을 열어보세요 · 음악이 함께 시작돼요 ♪</p>
+
+      <article class="letter" id="letter" hidden>
+        <p class="letter-head">HOGWARTS SCHOOL of HRA</p>
+        <p class="letter-title">송년회 초대장</p>
+        <p>친애하는 <b>20기 동기 여러분</b>과 <b>교수님</b>께,</p>
+        <p>한 해 동안 함께 마법을 익혀 온 여러분을<br />호그와트 대연회장의 송년회에 초대합니다.</p>
+        <dl class="info">
+          <dt>일시</dt><dd id="inv-date"></dd>
+          <dt>장소</dt><dd><span id="inv-place"></span> <a id="inv-map" class="map-link" target="_blank" rel="noopener">지도 보기 ↗</a></dd>
+          <dt>정원</dt><dd id="inv-cap"></dd>
+          <dt>준비물</dt><dd>웃는 얼굴, 그리고 노래 한 소절</dd>
+        </dl>
+        <p class="sign">부엉이 우편으로 회신 바랍니다.<br /><span>— 20기 송년회 준비위원회</span></p>
+      </article>
     </section>
 
-    <!-- 참석 신청 -->
-    <section id="rsvp" class="panel" role="tabpanel">
-      <div class="card parchment">
-        <h2>부엉이 회신</h2>
-        <p class="muted">참석 여부와 세이렌의 멜로디 참여 여부를 알려주세요.</p>
-        <form id="rsvp-form" autocomplete="off">
-          <label>이름<input name="name" required maxlength="20" placeholder="해리 포터" /></label>
-          <label>구분
-            <select name="role">
-              <option>20기</option><option>교수님</option><option>기타</option>
-            </select>
-          </label>
-          <fieldset>
-            <legend>참석 여부</legend>
-            <label class="pill"><input type="radio" name="attend" value="참석" required />참석</label>
-            <label class="pill"><input type="radio" name="attend" value="불참" />불참</label>
-            <label class="pill"><input type="radio" name="attend" value="미정" />미정</label>
-          </fieldset>
-          <fieldset>
-            <legend>세이렌의 멜로디 참여</legend>
-            <label class="pill"><input type="radio" name="siren" value="참여" required />참여할래요</label>
-            <label class="pill"><input type="radio" name="siren" value="관람" />관람만</label>
-          </fieldset>
-          <fieldset>
-            <legend>기숙사</legend>
-            <div class="houses" id="house-picker"></div>
-            <button type="button" class="btn ghost small" id="sort-hat">🎩 분류모자에게 맡기기</button>
-            <p class="hat-say" id="hat-say"></p>
-          </fieldset>
-          <label>한마디 (선택)<input name="note" maxlength="60" placeholder="기대돼요!" /></label>
-          <button class="btn gold" type="submit">회신 보내기</button>
-          <p class="form-msg" id="rsvp-msg"></p>
-        </form>
+    <section class="doors" id="doors" hidden>
+      <p class="eyebrow center">CHOOSE YOUR DOOR</p>
+      <h2 class="section-title">어느 문으로 들어가시겠어요?</h2>
+      <div class="door-grid">
+        <a href="rsvp.html" data-nav class="door door-hall">
+          <span class="door-img"></span>
+          <span class="door-body"><small>THE GREAT HALL</small><b>대연회장 · 참석 신청</b><em>참석 여부와 세이렌의 멜로디 참여를 알려주세요</em></span>
+        </a>
+        <a href="program.html" data-nav class="door door-map">
+          <span class="door-img"></span>
+          <span class="door-body"><small>THE MARAUDER'S MAP</small><b>마법 지도 · 프로그램</b><em>오늘 밤의 시간표를 따라가 보세요</em></span>
+        </a>
+        <a href="letters.html" data-nav class="door door-owl">
+          <span class="door-img"></span>
+          <span class="door-body"><small>THE OWLERY</small><b>부엉이 탑 · 롤링페이퍼</b><em>교수님께 부엉이 편지를 띄워주세요</em></span>
+        </a>
       </div>
-
-      <div class="card dark">
-        <h2>대연회장 현황</h2>
-        <div class="stats" id="rsvp-stats"></div>
-        <div class="house-bars" id="house-bars"></div>
-        <ul class="guest-list" id="guest-list"></ul>
-      </div>
-    </section>
-
-    <!-- 프로그램 -->
-    <section id="program" class="panel" role="tabpanel">
-      <div class="card dark">
-        <h2>오늘의 시간표</h2>
-        <p class="muted">항목을 누르면 자세한 내용이 보여요.</p>
-        <ol class="timeline" id="timeline"></ol>
-      </div>
-    </section>
-
-    <!-- 롤링페이퍼 -->
-    <section id="letters" class="panel" role="tabpanel">
-      <div class="card parchment">
-        <h2>교수님께 보내는 부엉이 편지</h2>
-        <p class="muted">송년회 마지막 순서에서 교수님께 전해드려요.</p>
-        <form id="letter-form" autocomplete="off">
-          <label>보내는 사람<input name="from" maxlength="20" placeholder="이름 (비워두면 익명)" /></label>
-          <label>편지 내용<textarea name="message" required maxlength="400" rows="5" placeholder="교수님, 한 해 동안 감사했습니다..."></textarea></label>
-          <div class="count"><span id="msg-count">0</span>/400</div>
-          <fieldset>
-            <legend>편지지 색</legend>
-            <div class="houses" id="letter-house"></div>
-          </fieldset>
-          <button class="btn gold" type="submit">🦉 부엉이로 보내기</button>
-          <p class="form-msg" id="letter-msg"></p>
-        </form>
-      </div>
-      <div class="letter-wall" id="letter-wall"></div>
     </section>
   </main>
 
-  <div class="owl-fly" id="owl-fly" aria-hidden="true">🦉✉️</div>
+  <div class="music" id="music">
+    <button class="music-btn" id="music-btn" type="button" aria-label="배경음악 재생/정지">
+      <span class="eq"><i></i><i></i><i></i></span><span class="music-label">BGM</span>
+    </button>
+    <div class="music-panel" id="music-panel">
+      <div id="yt"></div>
+      <p class="music-meta"></p>
+    </div>
+  </div>
 
-  <footer>Mischief Managed · HRA 20기</footer>
-  <script src="config.js?v=4"></script>
-  <script src="app.js?v=4"></script>
+  <footer class="foot">Mischief Managed · HRA 20기 <span>· Photos: Unsplash · Music: YouTube</span></footer>
+  <script src="config.js?v=5"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>
