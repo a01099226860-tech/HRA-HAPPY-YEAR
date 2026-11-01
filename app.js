@@ -67,9 +67,17 @@
   const api = {
     async list(kind) {
       if (demo) return JSON.parse(localStorage.getItem("hp-" + kind) || "[]");
-      const res = await fetch(`${E.scriptUrl}?kind=${kind}&t=${Date.now()}`);
-      if (!res.ok) throw new Error("불러오기 실패");
-      return res.json();
+      // 구글 Apps Script가 가끔 한 번씩 실패해서 최대 3번 시도
+      for (let i = 0; ; i++) {
+        try {
+          const res = await fetch(`${E.scriptUrl}?kind=${kind}&t=${Date.now()}`);
+          if (!res.ok) throw new Error("불러오기 실패");
+          return await res.json();
+        } catch (err) {
+          if (i >= 2) throw err;
+          await new Promise(r => setTimeout(r, 800 * (i + 1)));
+        }
+      }
     },
     async add(kind, data) {
       if (demo) {
