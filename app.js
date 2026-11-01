@@ -94,6 +94,7 @@
   /* ---------- 초대장 ---------- */
   $("#inv-date").textContent = E.date;
   $("#inv-place").textContent = E.place;
+  if (E.mapUrl) $("#inv-map").href = E.mapUrl; else $("#inv-map").remove();
   const env = $("#envelope");
   const openEnv = () => {
     if (env.classList.contains("open")) return;
@@ -136,6 +137,16 @@
     data.house = rsvpHouse.get();
     btn.disabled = true; msg.textContent = "부엉이가 날아가는 중...";
     try {
+      // 정원 확인: 새로 '참석'하는 사람만 막고, 이미 참석으로 낸 사람의 수정은 허용
+      if (E.capacity && data.attend === "참석") {
+        const list = await api.list("rsvp");
+        const already = list.some(r => r.name === data.name && r.attend === "참석");
+        const count = list.filter(r => r.attend === "참석").length;
+        if (!already && count >= E.capacity) {
+          msg.textContent = `⚠ 정원(${E.capacity}명)이 모두 찼어요. 준비위원회에 문의해주세요.`;
+          return;
+        }
+      }
       await api.add("rsvp", data);
       flyOwl();
       msg.textContent = `✔ ${data.name}님의 회신이 도착했어요! 같은 이름으로 다시 보내면 수정됩니다.`;
@@ -151,8 +162,10 @@
     try { list = await api.list("rsvp"); } catch { $("#rsvp-stats").innerHTML = `<p class="empty">현황을 불러오지 못했어요.</p>`; return; }
     const yes = list.filter(r => r.attend === "참석");
     const siren = list.filter(r => r.siren === "참여" && r.attend !== "불참");
+    const cap = E.capacity;
+    const full = cap && yes.length >= cap;
     $("#rsvp-stats").innerHTML = `
-      <div class="stat"><b>${yes.length}</b><small>참석</small></div>
+      <div class="stat${full ? " full" : ""}"><b>${yes.length}${cap ? `<small> / ${cap}</small>` : ""}</b><small>${full ? "정원 마감" : "참석"}</small></div>
       <div class="stat"><b>${list.length}</b><small>회신</small></div>
       <div class="stat"><b>${siren.length}</b><small>세이렌 참여</small></div>`;
     const bars = $("#house-bars"); bars.innerHTML = "";

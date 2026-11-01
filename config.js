@@ -1,7 +1,9 @@
 // 행사 정보는 여기만 고치면 사이트 전체에 반영됩니다.
 window.EVENT = {
-  date: "2026년 12월 ○일 (○) 오후 6시",   // TODO: 확정되면 수정
-  place: "장소 미정",                        // TODO: 확정되면 수정
+  date: "2026년 12월 26일 (토) 18:00 – 21:00",
+  place: "제주오픈런 (제주시 중앙로 238, 4층)",
+  mapUrl: "https://map.kakao.com/?q=" + encodeURIComponent("제주시 중앙로 238"),
+  capacity: 50,   // 최대 수용 인원
 
   // 구글 Apps Script 웹앱 URL (README 참고). 비워두면 체험 모드(이 브라우저에만 저장).
   scriptUrl: "https://script.google.com/macros/s/AKfycbzb22fjmIl93rg7W-cFHu2DV2LxChaXsgjqWDxzGhbpg8wtzPa-YoP2SN-eBWDR0DKI/exec",
