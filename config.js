@@ -13,7 +13,7 @@ window.EVENT = {
   sheetUrl: "https://docs.google.com/spreadsheets/d/19R82lNCL_yarcXprEpWWMctzDi5BW3yyq1pB-lmpy3M/edit",
 
   // 구글 Apps Script 웹앱 URL (README 참고). 비워두면 체험 모드(이 브라우저에만 저장).
-  scriptUrl: "https://script.google.com/macros/s/AKfycbzb22fjmIl93rg7W-cFHu2DV2LxChaXsgjqWDxzGhbpg8wtzPa-YoP2SN-eBWDR0DKI/exec",
+  scriptUrl: "https://script.google.com/macros/s/AKfycbzS5THGLQ4PDAvH_3PEVCpxnoWR3oDALgQEy1mKEStqMXOLBZFXREVKmdKvW9-kX8Xw/exec",
 
   program: [
     { time: "6:00 – 6:20", title: "입장 · 인사말", house: "g",
