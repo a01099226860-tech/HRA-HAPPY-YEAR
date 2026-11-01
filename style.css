@@ -5,7 +5,7 @@
   --img-hall: url("https://images.unsplash.com/photo-1511200903586-f88075762629?w=2000&q=70&auto=format&fit=crop");
   --img-candles: url("https://images.unsplash.com/photo-1495667496513-9068843d7679?w=900&q=70&auto=format&fit=crop");
   --img-map: url("https://images.unsplash.com/photo-1779293109155-2cda395601d1?w=1600&q=70&auto=format&fit=crop");
-  --img-owl: url("https://images.unsplash.com/photo-1777710399569-9da06b2c7dcd?w=1200&q=75&auto=format&fit=crop");
+  --img-owl: url("assets/harry-hedwig.webp");
   --img-owl-moon: url("https://images.unsplash.com/photo-1635803270148-1d6ed262bb74?w=2000&q=70&auto=format&fit=crop");
 
   --bg: #070d16;
@@ -254,7 +254,7 @@ legend { font-weight: 700; font-size: 14px; margin-bottom: 6px; width: 100%; }
 .door::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(7,13,22,.95) 15%, rgba(7,13,22,.2) 70%); }
 .door-hall .door-img { background-image: var(--img-candles); }
 .door-map .door-img { background-image: var(--img-map); filter: sepia(.3); }
-.door-owl .door-img { background-image: var(--img-owl); background-position: center 30%; }
+.door-owl .door-img { background-image: var(--img-owl); background-position: center 20%; }
 .door-body { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px; display: grid; gap: 4px; }
 .door-body small { font-family: var(--serif); letter-spacing: .25em; font-size: 10px; color: var(--gold-deep); }
 .door-body b { font-size: 20px; color: var(--gold); }
@@ -277,7 +277,7 @@ legend { font-weight: 700; font-size: 14px; margin-bottom: 6px; width: 100%; }
 .banner b { font-family: var(--serif); font-size: 20px; }
 .banner small { font-size: 11px; opacity: .85; }
 .guest-list { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-.guest-list li { font-size: 13px; padding: 4px 12px; border-radius: 999px; color: #fff; }
+.guest-list li { font-size: 13px; padding: 4px 12px; border-radius: 999px; color: var(--ink); background: rgba(228,204,150,.14); border: 1px solid rgba(228,204,150,.22); }
 .guest-list li.no { opacity: .45; text-decoration: line-through; }
 .empty { color: var(--muted); font-size: 14px; }
 
@@ -317,7 +317,7 @@ legend { font-weight: 700; font-size: 14px; margin-bottom: 6px; width: 100%; }
 
 /* ---------- 부엉이 탑 ---------- */
 .letters-top { grid-template-columns: .9fr 1.1fr; align-items: stretch; }
-.owl-photo { border-radius: 14px; min-height: 420px; background: var(--img-owl) center 30% / cover;
+.owl-photo { border-radius: 14px; min-height: 420px; background: var(--img-owl) center 15% / cover;
   box-shadow: 0 25px 60px rgba(0,0,0,.6); border: 1px solid rgba(228,204,150,.2); position: relative; overflow: hidden; }
 .owl-photo::after { content: "“편지는 부엉이가 꼭 전해드릴게요.”"; position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 20px 18px;
   background: linear-gradient(transparent, rgba(7,13,22,.9)); color: var(--gold); font-size: 15px; text-align: center; }
@@ -392,3 +392,22 @@ legend { font-weight: 700; font-size: 14px; margin-bottom: 6px; width: 100%; }
   .timeline li { opacity: 1; transform: none; filter: none; }
 }
 .letter-wall > .empty { column-span: all; }
+
+/* ---------- 기숙사 문장 ---------- */
+.crest-card { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; justify-items: center; text-align: center; }
+.crest-svg { width: 100%; height: auto; display: block; border-radius: 10px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.08); transition: transform .4s, box-shadow .4s; }
+.crest-card:hover .crest-svg { transform: translateY(-6px); box-shadow: 0 26px 50px rgba(0,0,0,.65), 0 0 34px rgba(228,204,150,.18); }
+.crest-card figcaption b { display: block; font-family: var(--serif); letter-spacing: .22em; color: var(--gold); font-size: 15px; }
+.crest-card figcaption span { font-size: 13px; color: var(--muted); }
+.houses-sec { margin-top: 40px; }
+.crest-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; margin-top: 28px; }
+.crest-head { font-size: 13px; color: var(--muted); margin: 0 0 10px; }
+.crest-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 22px; }
+.crest-row .crest-svg { border-radius: 6px; }
+.crest-row figcaption b { font-size: 9px; letter-spacing: .1em; }
+.crest-row figcaption span { font-size: 11px; }
+.assign-note { background: rgba(122,31,36,.07); border: 1px dashed rgba(122,31,36,.45); border-radius: 8px; padding: 12px 14px; font-size: 14px; }
+.assign-note p { margin: 4px 0 0; font-size: 13px; line-height: 1.7; }
+@media (max-width: 820px) { .crest-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; } }
+@media (max-width: 560px) { .crest-row figcaption b { display: none; } }

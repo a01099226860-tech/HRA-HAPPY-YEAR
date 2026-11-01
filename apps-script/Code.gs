@@ -65,7 +65,13 @@ function doPost(e) {
       // 같은 이름이 있으면 덮어쓰기 (회신 수정)
       const names = sh.getRange(1, 2, sh.getLastRow(), 1).getValues().map(r => String(r[0]));
       const idx = names.indexOf(row[1]);
-      if (idx > 0) { sh.getRange(idx + 1, 1, 1, row.length).setValues([row]); return json({ ok: true, updated: true }); }
+      if (idx > 0) {
+        // 기숙사는 준비위원회가 시트에서 배정하므로, 회신을 수정해도 기존 값을 유지
+        const hi = def.cols.indexOf("house");
+        row[hi] = sh.getRange(idx + 1, hi + 1).getValue() || row[hi];
+        sh.getRange(idx + 1, 1, 1, row.length).setValues([row]);
+        return json({ ok: true, updated: true });
+      }
     } else if (!row[2]) {
       return json({ ok: false, error: "내용이 필요합니다" });
     }

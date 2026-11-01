@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=5" />
+  <link rel="stylesheet" href="style.css?v=6" />
 </head>
 <body data-page="rsvp">
   <div class="bg" aria-hidden="true"><div class="bg-img"></div><div class="mist"></div><div class="fx"></div></div>
@@ -49,12 +49,10 @@
             <label class="pill"><input type="radio" name="siren" value="참여" required />참여할래요</label>
             <label class="pill"><input type="radio" name="siren" value="관람" />관람만</label>
           </fieldset>
-          <fieldset>
-            <legend>기숙사</legend>
-            <div class="houses" id="house-picker"></div>
-            <button type="button" class="btn ghost small" id="sort-hat">🎩 분류모자에게 맡기기</button>
-            <p class="hat-say" id="hat-say"></p>
-          </fieldset>
+          <div class="assign-note">
+            <b>기숙사 배정</b>
+            <p>기숙사는 직접 고르지 않아요. 준비위원회가 네 기숙사 중 한 곳으로 <b>랜덤 배정</b>하고, 결과는 송년회 당일 공개됩니다.</p>
+          </div>
           <label>한마디 (선택)<input name="note" maxlength="60" placeholder="기대돼요!" /></label>
           <button class="btn gold" type="submit">회신 보내기</button>
           <p class="form-msg" id="rsvp-msg"></p>
@@ -64,7 +62,8 @@
       <div class="card glass">
         <h2>오늘 밤의 연회장</h2>
         <div class="stats" id="rsvp-stats"><p class="empty">부엉이들을 불러오는 중...</p></div>
-        <div class="banners" id="banners"></div>
+        <p class="crest-head">네 개의 기숙사 · 이 중 한 곳으로 배정돼요</p>
+        <div class="crest-row" data-crests></div>
         <ul class="guest-list" id="guest-list"></ul>
       </div>
     </div>
@@ -80,8 +79,9 @@
     </div>
   </div>
 
-  <footer class="foot">Mischief Managed · HRA 20기 <span>· Photos: Unsplash · Music: YouTube</span></footer>
-  <script src="config.js?v=5"></script>
-  <script src="app.js?v=5"></script>
+  <footer class="foot">Mischief Managed · HRA 20기 <span>· Photos: Unsplash · Icons: game-icons.net (CC BY 3.0) · Music: YouTube</span></footer>
+  <script src="config.js?v=6"></script>
+  <script src="assets/crests.js?v=6"></script>
+  <script src="app.js?v=6"></script>
 </body>
 </html>

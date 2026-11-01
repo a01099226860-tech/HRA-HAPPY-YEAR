@@ -7,12 +7,60 @@
     set(k, v) { try { sessionStorage.setItem(k, v); } catch {} },
   };
 
+  // 기숙사: 문장 색 (배경, 테두리, 물결 3겹, 동물)
   const HOUSES = {
-    g: { name: "그리핀도르", icon: "🦁", color: "#8b1e1e" },
-    h: { name: "후플푸프", icon: "🦡", color: "#c9a227" },
-    r: { name: "래번클로", icon: "🦅", color: "#1e3a6b" },
-    s: { name: "슬리데린", icon: "🐍", color: "#1f5a3a" },
+    g: { name: "그리핀도르", en: "GRYFFINDOR", trait: "용기 · 대담함", color: "#8f3337",
+         pal: ["#8f3337", "#f8c9a0", "#b23a3a", "#d4584c", "#ec8a6c", "#fde3c4"] },
+    r: { name: "래번클로", en: "RAVENCLAW", trait: "지혜 · 재치", color: "#26246a",
+         pal: ["#26246a", "#b3bcff", "#2f2f86", "#4350b8", "#6573dc", "#e3e6ff"] },
+    h: { name: "후플푸프", en: "HUFFLEPUFF", trait: "성실 · 의리", color: "#8a6233",
+         pal: ["#8a6233", "#f6dd92", "#9c733b", "#b88d45", "#d5ad5c", "#fff0bf"] },
+    s: { name: "슬리데린", en: "SLYTHERIN", trait: "야망 · 지략", color: "#22646a",
+         pal: ["#22646a", "#95ecd9", "#1f7a78", "#2a9c92", "#46c2b0", "#d6fff5"] },
   };
+
+  // 아치형 기숙사 문장 (SVG)
+  let crestId = 0;
+  function crest(k) {
+    const [bg, frame, l1, l2, l3, animal] = HOUSES[k].pal;
+    const id = "cc" + crestId++;
+    const star = (x, y, s = 1) =>
+      `<path transform="translate(${x} ${y}) scale(${s})" d="M0-7L1.6-1.6 7 0 1.6 1.6 0 7-1.6 1.6-7 0-1.6-1.6Z" fill="${frame}"/>`;
+    const pillar = x => `
+      <rect x="${x - 6}" y="76" width="12" height="5" fill="${frame}"/>
+      <rect x="${x - 3}" y="81" width="6" height="138" fill="none" stroke="${frame}" stroke-width="1.6"/>
+      <rect x="${x - 6}" y="219" width="12" height="5" fill="${frame}"/>`;
+    return `<svg class="crest-svg" viewBox="0 0 200 300" role="img" aria-label="${HOUSES[k].name} 문장">
+      <defs><clipPath id="${id}"><rect x="44" y="24" width="112" height="252" rx="56"/></clipPath></defs>
+      <rect width="200" height="300" fill="${bg}"/>
+      <g clip-path="url(#${id})">
+        <rect width="200" height="300" fill="${l1}"/>
+        <circle cx="100" cy="66" r="24" fill="${frame}" opacity=".85"/>
+        <path d="M0 150C40 118 70 172 110 140S172 116 200 146V300H0Z" fill="${l2}"/>
+        <path d="M0 196C50 168 82 218 122 192S182 176 200 198V300H0Z" fill="${l3}"/>
+        <path d="M0 238C40 222 92 256 132 236S182 228 200 240V300H0Z" fill="${l2}" opacity=".75"/>
+        ${star(66, 110, .9)}${star(138, 104, 1.1)}${star(130, 70, .6)}${star(70, 180, .7)}${star(140, 220, .8)}
+        <g transform="translate(38 100) scale(.24)"><path d="${window.CREST_PATHS[k]}" fill="${animal}"/></g>
+        <path d="M66 252H134M78 260H122" stroke="${frame}" stroke-width="1.5" opacity=".7"/>
+      </g>
+      <rect x="44" y="24" width="112" height="252" rx="56" fill="none" stroke="${frame}" stroke-width="3"/>
+      <rect x="36" y="16" width="128" height="268" rx="64" fill="none" stroke="${frame}" stroke-width="1.2" opacity=".6"/>
+      <path d="M100 8V16M100 284V292" stroke="${frame}" stroke-width="1.5"/>
+      ${pillar(36)}${pillar(164)}
+    </svg>`;
+  }
+
+  // 문장 + 이름 카드 묶음 (data-crests 가 붙은 곳에 채움)
+  function fillCrests(main) {
+    $$("[data-crests]", main).forEach(box => {
+      const big = box.dataset.crests === "big";
+      box.innerHTML = Object.keys(HOUSES).map(k => `
+        <figure class="crest-card">
+          ${crest(k)}
+          <figcaption><b>${HOUSES[k].en}</b>${big ? `<span>${HOUSES[k].name} · ${HOUSES[k].trait}</span>` : `<span>${HOUSES[k].name}</span>`}</figcaption>
+        </figure>`).join("");
+    });
+  }
 
   /* ================= 데이터 (구글 시트 or 브라우저) ================= */
   const demo = !E.scriptUrl;
@@ -90,6 +138,7 @@
       main.insertAdjacentHTML("afterbegin",
         `<div class="demo-banner">지금은 <b>체험 모드</b>예요. 입력한 내용이 이 브라우저에만 저장됩니다.</div>`);
     }
+    fillCrests(main);
     inits[page] && inits[page](main);
   }
 
@@ -181,26 +230,6 @@
   })();
 
   /* ================= 공통 도우미 ================= */
-  function housePicker(container, onPick) {
-    let value = "";
-    const btns = Object.entries(HOUSES).map(([k, h]) => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "house-opt " + k;
-      b.setAttribute("aria-pressed", "false");
-      b.innerHTML = `<span>${h.icon}</span>${h.name}`;
-      b.addEventListener("click", () => set(k));
-      container.appendChild(b);
-      return [k, b];
-    });
-    function set(k) {
-      value = k;
-      btns.forEach(([key, b]) => b.setAttribute("aria-pressed", String(key === k)));
-      onPick && onPick(k);
-    }
-    return { get: () => value, set };
-  }
-
   function flyLetter() {
     const l = document.createElement("div");
     l.className = "fly-letter";
@@ -235,36 +264,13 @@
     env.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
   }
 
-  /* ================= 대연회장: 참석 신청 ================= */
+  /* ================= 대연회장: 참석 신청 (기숙사는 준비위원회가 랜덤 배정) ================= */
   function initRsvp(main) {
-    const picker = housePicker($("#house-picker", main), () => ($("#hat-say", main).textContent = ""));
-    const HAT = [
-      k => `음... 어렵군, 아주 어려워... 좋아, ${HOUSES[k].name}!`,
-      k => `용기와 재능이 보이는구나... ${HOUSES[k].name}!`,
-      k => `너의 자리는 정해져 있었지. ${HOUSES[k].name}!`,
-    ];
-    $("#sort-hat", main).addEventListener("click", () => {
-      const keys = Object.keys(HOUSES), say = $("#hat-say", main);
-      let n = 0;
-      const spin = setInterval(() => {
-        picker.set(keys[n++ % 4]);
-        say.textContent = "흐음" + ".".repeat(n % 4);
-        if (n > 10) {
-          clearInterval(spin);
-          const k = keys[Math.floor(Math.random() * 4)];
-          picker.set(k);
-          say.textContent = "🎩 " + HAT[Math.floor(Math.random() * HAT.length)](k);
-        }
-      }, 120);
-    });
-
     $("#rsvp-form", main).addEventListener("submit", async e => {
       e.preventDefault();
       const f = e.target, msg = $("#rsvp-msg", main), btn = f.querySelector("[type=submit]");
-      if (!picker.get()) { msg.textContent = "기숙사를 골라주세요 (모르겠으면 분류모자에게!)"; return; }
       const data = Object.fromEntries(new FormData(f));
       data.name = data.name.trim();
-      data.house = picker.get();
       btn.disabled = true; msg.textContent = "부엉이가 날아가는 중...";
       try {
         // 정원 확인: 새로 '참석'하는 사람만 막고, 이미 참석으로 낸 사람의 수정은 허용
@@ -279,7 +285,7 @@
         await api.add("rsvp", data);
         flyLetter();
         msg.textContent = `✔ ${data.name}님의 회신이 도착했어요! 같은 이름으로 다시 보내면 수정됩니다.`;
-        f.reset(); picker.set(""); $("#hat-say", main).textContent = "";
+        f.reset();
         loadRsvp(main);
       } catch {
         msg.textContent = "⚠ 전송에 실패했어요. 잠시 후 다시 시도해주세요.";
@@ -301,27 +307,15 @@
       <div class="stat"><b>${list.length}</b><small>회신</small></div>
       <div class="stat"><b>${siren.length}</b><small>세이렌 참여</small></div>`;
 
-    // 기숙사 깃발: 인원만큼 길게 내려옴
-    const counts = Object.fromEntries(Object.keys(HOUSES).map(k => [k, yes.filter(r => r.house === k).length]));
-    const max = Math.max(1, ...Object.values(counts));
-    const wrap = $("#banners", main);
-    wrap.innerHTML = "";
-    for (const [k, h] of Object.entries(HOUSES)) {
-      const b = document.createElement("div");
-      b.className = "banner bg-" + k;
-      b.style.height = "100px";
-      b.innerHTML = `<span>${h.icon}</span><b>${counts[k]}</b><small>${h.name}</small>`;
-      wrap.appendChild(b);
-      requestAnimationFrame(() => requestAnimationFrame(() => (b.style.height = 100 + (counts[k] / max) * 120 + "px")));
-    }
-
+    // 시트의 '기숙사' 칸을 준비위원회가 채우면 이름표 색이 바뀜
     const ul = $("#guest-list", main);
     ul.innerHTML = "";
     if (!list.length) { ul.innerHTML = `<li class="empty">아직 도착한 부엉이가 없어요.</li>`; return; }
     list.forEach(r => {
       const li = document.createElement("li");
-      li.className = "bg-" + (HOUSES[r.house] ? r.house : "g") + (r.attend === "불참" ? " no" : "");
-      li.textContent = `${HOUSES[r.house]?.icon || ""} ${r.name}${r.attend === "미정" ? " (미정)" : ""}`;
+      if (HOUSES[r.house]) li.style.background = HOUSES[r.house].color;
+      if (r.attend === "불참") li.classList.add("no");
+      li.textContent = r.name + (r.attend === "미정" ? " (미정)" : "");
       ul.appendChild(li);
     });
   }
@@ -367,8 +361,6 @@
 
   /* ================= 부엉이 탑: 롤링페이퍼 ================= */
   function initLetters(main) {
-    const picker = housePicker($("#letter-house", main));
-    picker.set("g");
     const ta = $("textarea", main);
     ta.addEventListener("input", () => ($("#msg-count", main).textContent = ta.value.length));
 
@@ -378,14 +370,14 @@
       const data = Object.fromEntries(new FormData(f));
       data.from = data.from.trim() || "익명의 마법사";
       data.message = data.message.trim();
-      data.house = picker.get();
+      data.house = Object.keys(HOUSES)[Math.floor(Math.random() * 4)]; // 봉인 색은 랜덤
       if (!data.message) return;
       btn.disabled = true; msg.textContent = "부엉이가 편지를 물고 가는 중...";
       try {
         await api.add("letters", data);
         flyLetter();
         msg.textContent = "✔ 편지가 교수님 우편함에 도착했어요!";
-        f.reset(); $("#msg-count", main).textContent = "0"; picker.set("g");
+        f.reset(); $("#msg-count", main).textContent = "0";
         loadLetters(main);
       } catch {
         msg.textContent = "⚠ 전송에 실패했어요. 잠시 후 다시 시도해주세요.";
