@@ -445,3 +445,33 @@ legend { font-weight: 700; font-size: 14px; margin-bottom: 6px; width: 100%; }
 .hint { font-size: 12px; color: var(--muted); margin: 14px 0 0; }
 @media (max-width: 560px) { .stats-5 { grid-template-columns: repeat(3, 1fr); } }
 #admin-form[hidden], #admin-body[hidden] { display: none; }
+
+/* ---------- 기숙사 카드 뒤집기 ---------- */
+.flip { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; perspective: 1100px; font: inherit; color: inherit; }
+.flip:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 10px; }
+.flip-inner { position: relative; display: block; transform-style: preserve-3d; transition: transform .8s cubic-bezier(.3,.7,.25,1); }
+.flip.on .flip-inner { transform: rotateY(180deg); }
+.flip:hover .flip-inner { translate: 0 -6px; }
+.face { display: block; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.face.front .crest-svg { transition: box-shadow .4s; }
+.crest-card:hover .crest-svg { transform: none; }
+.face.back {
+  position: absolute; inset: 0; transform: rotateY(180deg); border-radius: 10px; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center;
+  padding: 18% 16%; color: var(--c5);
+  background: radial-gradient(ellipse at 50% 20%, rgba(255,255,255,.12), transparent 60%), var(--c0);
+  box-shadow: 0 18px 40px rgba(0,0,0,.55);
+}
+.face.back::before { content: ""; position: absolute; inset: 5% 8%; border: 2px solid var(--c1); border-radius: 999px / 24%; opacity: .8; pointer-events: none; }
+.face.back::after { content: ""; position: absolute; inset: 2.5% 4.5%; border: 1px solid var(--c1); border-radius: 999px / 26%; opacity: .4; pointer-events: none; }
+.back-animal { width: 34%; height: auto; margin-bottom: 4px; filter: drop-shadow(0 2px 4px rgba(0,0,0,.3)); }
+.back-name { font-size: 20px; color: var(--c1); }
+.back-trait { font-size: 13px; letter-spacing: .1em; color: var(--c1); opacity: .9; }
+.back-desc { font-size: 14px; line-height: 1.7; margin-top: 6px; color: var(--c5); }
+.flip-hint { display: block; font-style: normal; font-size: 12px; color: var(--gold-deep); margin-top: 4px; }
+.crest-row .face.back { padding: 10% 6%; gap: 2px; }
+.crest-row .back-name { font-size: 11px; }
+.crest-row .back-trait { font-size: 9px; letter-spacing: 0; }
+.crest-row .back-animal { width: 45%; }
+@media (max-width: 820px) { .back-desc { font-size: 13px; } }
+@media (max-width: 400px) { .back-desc { font-size: 12px; line-height: 1.55; } .back-name { font-size: 17px; } }

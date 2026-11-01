@@ -1,10 +1,7 @@
 // HRA 2026 송년회 – 구글 시트 연결 스크립트
 // 구글 시트 > 확장 프로그램 > Apps Script 에 이 내용을 그대로 붙여넣고 웹앱으로 배포하세요.
 // 시트 탭 "참석자", "롤링페이퍼" 는 처음 저장할 때 자동으로 만들어집니다.
-//
-// ★ 붙여넣은 뒤 아래 ADMIN_KEY 를 운영단만 아는 비밀번호로 바꾸세요. (GitHub에는 올리지 마세요)
-//   사이트의 '운영단' 페이지에서 이 비밀번호를 넣어야 참석자 명단과 롤링페이퍼가 보입니다.
-const ADMIN_KEY = "여기에-운영단-비밀번호";
+// 공개 조회는 숫자만 돌려주고, 이름·편지 내용은 이 시트에서만 볼 수 있습니다.
 const CAPACITY = 50; // 최대 참석 인원
 
 const SHEETS = {
@@ -68,14 +65,6 @@ function doPost(e) {
   try {
     const d = JSON.parse(e.postData.contents);
 
-    // 운영단 조회: 비밀번호가 맞을 때만 전체 데이터
-    if (d.kind === "admin") {
-      if (ADMIN_KEY === "여기에-운영단-비밀번호" || String(d.key) !== ADMIN_KEY) {
-        Utilities.sleep(1500); // 비밀번호 마구 넣어보기 방지
-        return json({ ok: false, error: "비밀번호가 맞지 않아요" });
-      }
-      return json({ ok: true, rsvp: rowsOf("rsvp"), letters: rowsOf("letters"), capacity: CAPACITY });
-    }
 
     const def = SHEETS[d.kind];
     if (!def) return json({ ok: false, error: "unknown kind" });

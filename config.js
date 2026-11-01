@@ -9,6 +9,9 @@ window.EVENT = {
   // 배경음악 파일 (assets 폴더)
   bgm: { src: "assets/bgm.mp3", title: "해리포터 BGM" },
 
+  // 운영단 전용: 구글 시트 (공유된 사람만 열 수 있음)
+  sheetUrl: "https://docs.google.com/spreadsheets/d/19R82lNCL_yarcXprEpWWMctzDi5BW3yyq1pB-lmpy3M/edit",
+
   // 구글 Apps Script 웹앱 URL (README 참고). 비워두면 체험 모드(이 브라우저에만 저장).
   scriptUrl: "https://script.google.com/macros/s/AKfycbzb22fjmIl93rg7W-cFHu2DV2LxChaXsgjqWDxzGhbpg8wtzPa-YoP2SN-eBWDR0DKI/exec",
 

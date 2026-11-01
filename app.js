@@ -54,11 +54,30 @@
   function fillCrests(main) {
     $$("[data-crests]", main).forEach(box => {
       const big = box.dataset.crests === "big";
-      box.innerHTML = Object.keys(HOUSES).map(k => `
-        <figure class="crest-card" title="${HOUSES[k].name} · ${HOUSES[k].desc}">
-          ${crest(k)}
-          <figcaption><b>${HOUSES[k].en}</b>${big ? `<span>${HOUSES[k].name} · ${HOUSES[k].trait}</span><p class="crest-desc">${HOUSES[k].desc}</p>` : `<span>${HOUSES[k].name}</span>`}</figcaption>
-        </figure>`).join("");
+      box.innerHTML = Object.keys(HOUSES).map(k => {
+        const h = HOUSES[k], [c0, c1, , , , c5] = h.pal;
+        return `
+        <figure class="crest-card">
+          <button class="flip" type="button" aria-pressed="false" aria-label="${h.name} 설명 보기"
+                  style="--c0:${c0};--c1:${c1};--c5:${c5}">
+            <span class="flip-inner">
+              <span class="face front">${crest(k)}</span>
+              <span class="face back">
+                <svg viewBox="0 0 512 512" class="back-animal" aria-hidden="true"><path d="${window.CREST_PATHS[k]}" fill="${c1}"/></svg>
+                <b class="back-name">${h.name}</b>
+                <span class="back-trait">${h.trait}</span>
+                ${big ? `<span class="back-desc">${h.desc}</span>` : ""}
+              </span>
+            </span>
+          </button>
+          <figcaption><b>${h.en}</b><span>${h.name}</span>${big ? `<em class="flip-hint">눌러서 설명 보기 ↻</em>` : ""}</figcaption>
+        </figure>`;
+      }).join("");
+      // 누르면 카드가 회전하며 뒷면(설명)이 보임
+      $$(".flip", box).forEach(btn => btn.addEventListener("click", () => {
+        const on = btn.classList.toggle("on");
+        btn.setAttribute("aria-pressed", String(on));
+      }));
     });
   }
 
@@ -98,7 +117,7 @@
       if (!out.ok) throw new Error(out.error || "저장 실패");
       return out;
     },
-    // 공개용: 숫자만 (이름·편지 내용은 운영단 페이지에서만)
+    // 공개용: 숫자만 (이름·편지 내용은 운영단 구글 시트에서만)
     async summary(kind) {
       const d = await api.list(kind);
       if (!Array.isArray(d)) return d;
@@ -108,20 +127,6 @@
         siren: d.filter(r => r.siren === "참여" && r.attend !== "불참").length,
       };
       return { count: d.length };
-    },
-    // 운영단용: 비밀번호 확인 후 전체 데이터
-    async admin(key) {
-      if (demo) return {
-        ok: true,
-        rsvp: JSON.parse(localStorage.getItem("hp-rsvp") || "[]"),
-        letters: JSON.parse(localStorage.getItem("hp-letters") || "[]"),
-      };
-      const res = await fetch(E.scriptUrl, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ kind: "admin", key }),
-      });
-      return res.json();
     },
   };
 
@@ -155,7 +160,7 @@
   }
 
   /* ================= 페이지 이동 (음악이 끊기지 않게 본문만 교체) ================= */
-  const inits = { home: initHome, rsvp: initRsvp, program: initProgram, letters: initLetters, admin: initAdmin };
+  const inits = { home: initHome, rsvp: initRsvp, program: initProgram, letters: initLetters };
 
   function setActive(page) {
     $$(".nav a").forEach(a => a.classList.toggle("active", a.dataset.key === page));
@@ -387,78 +392,9 @@
     $("#letter-count", main).textContent = s.count;
   }
 
-  /* ================= 운영단 페이지 (비밀번호 필요) ================= */
-  function initAdmin(main) {
-    const form = $("#admin-form", main), msg = $("#admin-msg", main);
-    const show = d => {
-      form.hidden = true;
-      $("#admin-body", main).hidden = false;
-      renderAdmin(main, d);
-    };
-    async function login(key) {
-      msg.textContent = "확인하는 중...";
-      try {
-        const d = await api.admin(key);
-        if (!d.ok) { msg.textContent = "⚠ " + (d.error || "비밀번호가 맞지 않아요"); store.set("admin-key", ""); return; }
-        store.set("admin-key", key);
-        msg.textContent = "";
-        show(d);
-      } catch {
-        msg.textContent = "⚠ 불러오지 못했어요. 잠시 후 다시 시도해주세요.";
-      }
-    }
-    form.addEventListener("submit", e => { e.preventDefault(); login(form.key.value); });
-    $("#admin-refresh", main).addEventListener("click", () => login(store.get("admin-key")));
-    $("#admin-logout", main).addEventListener("click", () => {
-      store.set("admin-key", "");
-      form.hidden = false; form.reset();
-      $("#admin-body", main).hidden = true;
-    });
-    if (demo) login("");
-    else if (store.get("admin-key")) login(store.get("admin-key"));
-  }
-
-  function renderAdmin(main, d) {
-    const rsvp = d.rsvp || [], letters = d.letters || [];
-    const yes = rsvp.filter(r => r.attend === "참석");
-    $("#admin-stats", main).innerHTML = `
-      <div class="stat"><b>${yes.length}<small> / ${d.capacity || E.capacity}</small></b><small>참석</small></div>
-      <div class="stat"><b>${rsvp.filter(r => r.attend === "미정").length}</b><small>미정</small></div>
-      <div class="stat"><b>${rsvp.filter(r => r.attend === "불참").length}</b><small>불참</small></div>
-      <div class="stat"><b>${rsvp.filter(r => r.siren === "참여" && r.attend !== "불참").length}</b><small>세이렌 참여</small></div>
-      <div class="stat"><b>${letters.length}</b><small>편지</small></div>`;
-
-    const tb = $("#admin-table tbody", main);
-    tb.innerHTML = "";
-    const order = { 참석: 0, 미정: 1, 불참: 2 };
-    rsvp.slice().sort((a, b) => (order[a.attend] ?? 3) - (order[b.attend] ?? 3)).forEach(r => {
-      const tr = document.createElement("tr");
-      [r.name, r.role, r.attend, r.siren, HOUSES[r.house]?.name || "미배정", r.note].forEach(v => {
-        const td = document.createElement("td");
-        td.textContent = v || "";
-        tr.appendChild(td);
-      });
-      if (HOUSES[r.house]) tr.children[4].style.color = HOUSES[r.house].pal[1];
-      tb.appendChild(tr);
-    });
-    if (!rsvp.length) tb.innerHTML = `<tr><td colspan="6" class="empty">아직 회신이 없어요.</td></tr>`;
-
-    const wall = $("#letter-wall", main);
-    wall.innerHTML = "";
-    if (!letters.length) { wall.innerHTML = `<p class="empty center">아직 도착한 편지가 없어요.</p>`; return; }
-    letters.slice().reverse().forEach(l => {
-      const n = document.createElement("div");
-      n.className = "note";
-      n.style.setProperty("--band", HOUSES[l.house]?.color || "#7a1f24");
-      n.innerHTML = `<span class="wax"></span>`;
-      n.append(l.message);
-      const s = document.createElement("span");
-      s.className = "from";
-      s.textContent = "— " + l.from;
-      n.appendChild(s);
-      wall.appendChild(n);
-    });
-  }
+  // 운영단 링크: 구글 시트로 바로 이동 (시트 공유 설정으로 접근 제한)
+  const adminLink = $("#admin-link");
+  if (adminLink && E.sheetUrl) adminLink.href = E.sheetUrl;
 
   startPage();
 })();
