@@ -429,6 +429,10 @@
     }
     form.addEventListener("submit", e => { e.preventDefault(); login(form.key.value); });
     $("#admin-refresh", main).addEventListener("click", () => login(store.get("admin-key")));
+    $("#admin-print", main).addEventListener("click", () => {
+      if (!main._adminData) return;
+      printLetters(main._adminData.letters || [], $("#print-style", main).value);
+    });
     $("#admin-logout", main).addEventListener("click", () => {
       store.set("admin-key", "");
       form.hidden = false; form.reset();
@@ -439,6 +443,7 @@
   }
 
   function renderAdmin(main, d) {
+    main._adminData = d;
     const rsvp = d.rsvp || [], letters = d.letters || [];
     const yes = rsvp.filter(r => r.attend === "참석");
     $("#admin-stats", main).innerHTML = `
@@ -478,6 +483,52 @@
       n.appendChild(s);
       wall.appendChild(n);
     });
+  }
+
+
+  /* ================= 롤링페이퍼 인쇄 (A4, 표지 + 편지) ================= */
+  function buildPrint(letters, style) {
+    let area = $("#print-area");
+    if (!area) { area = document.createElement("div"); area.id = "print-area"; document.body.appendChild(area); }
+    const day = (E.date || "").split("(")[0].trim();
+    area.className = style === "ink" ? "ink" : "";
+    area.innerHTML = `
+      <section class="p-cover">
+        <div class="p-frame"></div>
+        <div class="p-seal">H</div>
+        <p class="p-eyebrow">HOGWARTS SCHOOL of HRA</p>
+        <h1 class="p-title">교수님께</h1>
+        <p class="p-sub">HRA 2026 송년회 · 부엉이 편지</p>
+        <p class="p-meta">${day} · ${letters.length}통의 편지</p>
+        <div class="p-crests">${Object.keys(HOUSES).map(k => crest(k)).join("")}</div>
+        <p class="p-foot">Mischief Managed</p>
+      </section>
+      <section class="p-letters"></section>`;
+    const box = $(".p-letters", area);
+    letters.forEach(l => { // 도착한 순서대로
+      const n = document.createElement("article");
+      n.className = "p-note";
+      n.style.setProperty("--band", HOUSES[l.house]?.color || "#7a1f24");
+      const msg = document.createElement("p");
+      msg.className = "p-msg";
+      msg.textContent = l.message;
+      const from = document.createElement("p");
+      from.className = "p-from";
+      from.textContent = "— " + (l.from || "익명의 마법사");
+      n.append(msg, from);
+      box.appendChild(n);
+    });
+    return area;
+  }
+
+  function printLetters(letters, style) {
+    if (!letters.length) { alert("아직 인쇄할 편지가 없어요."); return; }
+    buildPrint(letters, style);
+    const root = document.documentElement;
+    root.classList.add("printing");
+    const done = () => { root.classList.remove("printing"); window.removeEventListener("afterprint", done); };
+    window.addEventListener("afterprint", done);
+    setTimeout(() => window.print(), 300); // 글꼴·그림이 그려질 시간
   }
 
   startPage();

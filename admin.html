@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=12" />
+  <link rel="stylesheet" href="style.css?v=13" />
 </head>
 <body data-page="admin">
   <div class="bg" aria-hidden="true"><div class="bg-img"></div><div class="mist"></div><div class="fx"></div></div>
@@ -39,6 +39,11 @@
       <div class="admin-tools">
         <a class="btn ghost-light small" id="admin-sheet" target="_blank" rel="noopener">구글 시트에서 편집 ↗</a>
         <button class="btn ghost-light small" id="admin-refresh" type="button">↻ 새로고침</button>
+        <select class="print-style" id="print-style" aria-label="인쇄 스타일">
+          <option value="color">양피지 컬러</option>
+          <option value="ink">잉크 절약 (흰 배경)</option>
+        </select>
+        <button class="btn gold small" id="admin-print" type="button">🖨 롤링페이퍼 인쇄</button>
         <button class="btn ghost-light small" id="admin-logout" type="button">나가기</button>
       </div>
       <div class="card glass">
@@ -65,8 +70,8 @@
   </div>
 
   <footer class="foot">Mischief Managed · HRA 2026 <span>· Photos: Unsplash · Icons: game-icons.net (CC BY 3.0)</span> <a href="admin.html" data-nav class="foot-admin">운영단 🔒</a></footer>
-  <script src="config.js?v=12"></script>
-  <script src="assets/crests.js?v=12"></script>
-  <script src="app.js?v=12"></script>
+  <script src="config.js?v=13"></script>
+  <script src="assets/crests.js?v=13"></script>
+  <script src="app.js?v=13"></script>
 </body>
 </html>
