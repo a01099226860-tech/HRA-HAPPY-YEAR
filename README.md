@@ -29,9 +29,9 @@
 `scriptUrl`이 비어 있으면 "체험 모드"로 동작하며 입력 내용은 각자 브라우저에만 저장됩니다.
 
 ## 2. 인터넷에 올리기 (GitHub Pages)
-1. GitHub에서 새 저장소 생성 (예: `hra-2026-year-end-party`, Public)
+1. GitHub 저장소: https://github.com/a01099226860-tech/HRA-HAPPY-YEAR (Public)
 2. 이 폴더의 파일을 업로드 (Add file → Upload files). `AI_활용_기록표.xlsx`는 올리지 마세요.
 3. 저장소 **Settings → Pages → Branch: main / (root) → Save**
-4. 1~2분 후 `https://<아이디>.github.io/hra-2026-year-end-party/` 로 접속
+4. 1~2분 후 https://a01099226860-tech.github.io/HRA-HAPPY-YEAR/ 로 접속
 
 탭 바로가기 링크: 주소 끝에 `#rsvp`, `#program`, `#letters`를 붙이면 해당 탭이 열립니다.

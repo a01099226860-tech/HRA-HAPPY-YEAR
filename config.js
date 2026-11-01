@@ -4,7 +4,7 @@ window.EVENT = {
   place: "장소 미정",                        // TODO: 확정되면 수정
 
   // 구글 Apps Script 웹앱 URL (README 참고). 비워두면 체험 모드(이 브라우저에만 저장).
-  scriptUrl: "",
+  scriptUrl: "https://script.google.com/macros/s/AKfycbzb22fjmIl93rg7W-cFHu2DV2LxChaXsgjqWDxzGhbpg8wtzPa-YoP2SN-eBWDR0DKI/exec",
 
   program: [
     { time: "6:00 – 6:20", title: "입장 · 인사말", house: "g",
