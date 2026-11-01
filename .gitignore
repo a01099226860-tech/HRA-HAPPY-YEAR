@@ -1,2 +1,6 @@
 *.xlsx
 .claude/
+*.pptx
+~$*
+*.docx
+*.pdf
