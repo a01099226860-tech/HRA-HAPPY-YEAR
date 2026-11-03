@@ -407,7 +407,6 @@
       const data = Object.fromEntries(new FormData(f));
       data.from = data.from.trim() || "익명의 마법사";
       data.message = data.message.trim();
-      data.house = Object.keys(HOUSES)[Math.floor(Math.random() * 4)]; // 봉인 색은 랜덤
       if (demo) data.id = Math.random().toString(36).slice(2, 10);
       if (!data.message) return;
       btn.disabled = true; msg.textContent = "부엉이가 편지를 물고 가는 중...";
@@ -558,7 +557,6 @@
     letters.slice().reverse().forEach(l => {
       const n = document.createElement("div");
       n.className = "note";
-      n.style.setProperty("--band", HOUSES[l.house]?.color || "#7a1f24");
       n.innerHTML = `<span class="wax"></span>`;
       n.append(l.message);
       const s = document.createElement("span");
@@ -592,7 +590,6 @@
     letters.forEach(l => { // 도착한 순서대로
       const n = document.createElement("article");
       n.className = "p-note";
-      n.style.setProperty("--band", HOUSES[l.house]?.color || "#7a1f24");
       const msg = document.createElement("p");
       msg.className = "p-msg";
       msg.textContent = l.message;

@@ -13,8 +13,8 @@ const SHEETS = {
   rsvp: { name: "참석자", cols: ["time", "name", "role", "attend", "siren", "house", "note"],
           head: ["제출시각", "이름", "구분", "참석", "세이렌", "기숙사", "한마디"] },
   // 편지 비밀번호는 원문을 저장하지 않고 암호화(해시)해서 저장
-  letters: { name: "롤링페이퍼", cols: ["time", "from", "message", "house", "id", "pwhash", "edited"],
-          head: ["제출시각", "보낸사람", "내용", "편지지", "편지번호", "비번(암호화)", "수정시각"] },
+  letters: { name: "롤링페이퍼", cols: ["time", "from", "message", "id", "pwhash", "edited"],
+          head: ["제출시각", "보낸사람", "내용", "편지번호", "비번(암호화)", "수정시각"] },
 };
 const HIDDEN = ["pwhash"]; // 운영단 페이지에도 보내지 않는 열
 const HOUSE_KO = { g: "그리핀도르", h: "후플푸프", r: "래번클로", s: "슬리데린" };
@@ -29,8 +29,14 @@ function sheetFor(kind) {
     sh = ss.insertSheet(def.name);
     sh.setFrozenRows(1);
   }
-  // 머리글이 없거나 예전 버전(열이 적음)이면 채워 넣기
-  if (sh.getLastColumn() < def.head.length || sh.getRange(1, 1).getValue() !== def.head[0]) {
+  // 예전 버전의 "편지지" 칸이 남아 있으면 칸째로 지움 (편지 색은 한 가지로 통일)
+  if (kind === "letters" && sh.getLastColumn() > 0) {
+    const old = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0].indexOf("편지지");
+    if (old >= 0) sh.deleteColumn(old + 1);
+  }
+  // 머리글이 없거나 다르면 다시 채워 넣기
+  const cur = sh.getLastColumn() ? sh.getRange(1, 1, 1, def.head.length).getValues()[0] : [];
+  if (def.head.some((h, i) => cur[i] !== h)) {
     sh.getRange(1, 1, 1, def.head.length).setValues([def.head]).setFontWeight("bold").setBackground("#e4cc96");
   }
   return sh;
@@ -122,7 +128,7 @@ function doPost(e) {
         return json({ ok: false, error: "same" });
       }
       const id = Utilities.getUuid().replace(/-/g, "").slice(0, 8);
-      const row = { time: new Date(), from, message, house: HOUSE_KO[d.house] || "", id, pwhash: hashPw(id, pw), edited: "" };
+      const row = { time: new Date(), from, message, id, pwhash: hashPw(id, pw), edited: "" };
       sh.appendRow(C.map(c => row[c]));
       return json({ ok: true, id });
     }
