@@ -1,8 +1,8 @@
 // 행사 정보는 여기만 고치면 사이트 전체에 반영됩니다.
 window.EVENT = {
   date: "2026년 12월 26일 (토) 18:00 – 21:00",
-  place: "제주오픈런 (제주시 중앙로 238, 4층)",
-  mapUrl: "https://map.kakao.com/?q=" + encodeURIComponent("제주시 중앙로 238"),
+  place: "더블랭크 (제주시 도남서길 22)",
+  mapUrl: "https://place.map.kakao.com/404035026",
   capacity: 50,   // 최대 수용 인원
   eventDay: "2026-12-26",  // 당일에는 프로그램 페이지에서 지금 순서를 표시
 
