@@ -342,7 +342,8 @@
       li.style.setProperty("--i", i);
       li.style.setProperty("--dot", p.house ? HOUSES[p.house].color : "#8a7a5a");
       if (p.rest) li.classList.add("rest");
-      if (i === nowIdx) li.classList.add("now", "open");
+      li.classList.add("open"); // 설명은 처음부터 펼쳐서 보여줌
+      if (i === nowIdx) li.classList.add("now");
       li.innerHTML = `
         <button class="tl-btn" type="button"><span class="tl-time"></span><span class="tl-title"></span><span class="tl-arrow">›</span></button>
         <div class="tl-desc"></div>`;
