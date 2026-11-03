@@ -373,6 +373,29 @@
   }
 
   /* ================= 부엉이 탑: 롤링페이퍼 (내용은 운영단만 열람) ================= */
+  // 편지 보기·수정 요청 (체험 모드는 브라우저 저장소에서 처리)
+  async function letterCall(payload) {
+    if (demo) {
+      const list = JSON.parse(localStorage.getItem("hp-letters") || "[]");
+      const from = (payload.from || "").trim() || "익명의 마법사";
+      if (payload.kind === "myletters") {
+        const mine = list.filter(l => l.from === from && l.pw === payload.pw);
+        return mine.length ? { ok: true, letters: mine } : { ok: false, error: "보낸 사람 이름 또는 비밀번호가 맞지 않아요" };
+      }
+      const l = list.find(x => x.id === payload.id && x.pw === payload.pw);
+      if (!l) return { ok: false, error: "비밀번호가 맞지 않아요" };
+      l.message = payload.message;
+      localStorage.setItem("hp-letters", JSON.stringify(list));
+      return { ok: true };
+    }
+    const res = await fetch(E.scriptUrl, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+    });
+    return res.json();
+  }
+
   function initLetters(main) {
     const ta = $("textarea", main);
     ta.addEventListener("input", () => ($("#msg-count", main).textContent = ta.value.length));
@@ -384,18 +407,78 @@
       data.from = data.from.trim() || "익명의 마법사";
       data.message = data.message.trim();
       data.house = Object.keys(HOUSES)[Math.floor(Math.random() * 4)]; // 봉인 색은 랜덤
+      if (demo) data.id = Math.random().toString(36).slice(2, 10);
       if (!data.message) return;
       btn.disabled = true; msg.textContent = "부엉이가 편지를 물고 가는 중...";
       try {
         await api.add("letters", data);
         flyLetter();
-        msg.textContent = "✔ 편지가 봉인되어 운영단에게 전달됐어요. 송년회 날 교수님께 전해드릴게요!";
+        msg.innerHTML = "";
+        msg.append("✔ 편지가 봉인되어 운영단에게 전달됐어요. 수정하려면 아래 ‘내가 쓴 편지’에서 ");
+        const b = document.createElement("b");
+        b.textContent = `보낸 사람(${data.from === "익명의 마법사" ? "비워두기" : data.from})과 비밀번호`;
+        msg.append(b, "를 넣으면 돼요.");
         f.reset(); $("#msg-count", main).textContent = "0";
         loadLetters(main);
-      } catch {
-        msg.textContent = "⚠ 전송에 실패했어요. 잠시 후 다시 시도해주세요.";
+      } catch (err) {
+        msg.textContent = err.message === "same"
+          ? "⚠ 같은 이름으로 같은 비밀번호를 쓴 편지가 이미 있어요. 다른 비밀번호를 써주세요."
+          : err.message.includes("비밀번호") ? "⚠ " + err.message
+          : "⚠ 전송에 실패했어요. 잠시 후 다시 시도해주세요.";
       } finally { btn.disabled = false; }
     });
+
+    // 내가 쓴 편지 보기 · 수정
+    const myForm = $("#my-form", main), myMsg = $("#my-msg", main), list = $("#my-list", main);
+    let cred = null;
+    myForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      const btn = myForm.querySelector("[type=submit]");
+      cred = { from: myForm.from.value.trim(), pw: myForm.pw.value };
+      btn.disabled = true; myMsg.textContent = "편지를 찾는 중..."; list.innerHTML = "";
+      try {
+        const r = await letterCall({ kind: "myletters", ...cred });
+        if (!r.ok) { myMsg.textContent = "⚠ " + r.error; return; }
+        myMsg.textContent = `편지 ${r.letters.length}통을 찾았어요. 고친 뒤 ‘수정 저장’을 눌러주세요.`;
+        r.letters.forEach(l => list.appendChild(editCard(l)));
+      } catch {
+        myMsg.textContent = "⚠ 불러오지 못했어요. 잠시 후 다시 시도해주세요.";
+      } finally { btn.disabled = false; }
+    });
+
+    function editCard(l) {
+      const card = document.createElement("div");
+      card.className = "edit-card";
+      const head = document.createElement("p");
+      head.className = "edit-head";
+      head.textContent = `— ${l.from}` + (l.time ? ` · ${new Date(l.time).toLocaleDateString("ko-KR")}` : "");
+      const t = document.createElement("textarea");
+      t.maxLength = 400; t.rows = 6; t.value = l.message;
+      const row = document.createElement("div");
+      row.className = "edit-row";
+      const count = document.createElement("span");
+      count.className = "count";
+      count.textContent = `${t.value.length}/400`;
+      t.addEventListener("input", () => (count.textContent = `${t.value.length}/400`));
+      const save = document.createElement("button");
+      save.className = "btn gold small"; save.type = "button"; save.textContent = "수정 저장";
+      const note = document.createElement("p");
+      note.className = "form-msg";
+      save.addEventListener("click", async () => {
+        if (!t.value.trim()) { note.textContent = "⚠ 내용을 비울 수는 없어요."; return; }
+        save.disabled = true; note.textContent = "저장하는 중...";
+        try {
+          const r = await letterCall({ kind: "editletter", id: l.id, pw: cred.pw, message: t.value.trim() });
+          note.textContent = r.ok ? "✔ 수정됐어요!" : "⚠ " + r.error;
+        } catch {
+          note.textContent = "⚠ 저장하지 못했어요. 잠시 후 다시 시도해주세요.";
+        } finally { save.disabled = false; }
+      });
+      row.append(count, save);
+      card.append(head, t, row, note);
+      return card;
+    }
+
     loadLetters(main);
   }
 
