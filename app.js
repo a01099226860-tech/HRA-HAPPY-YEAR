@@ -174,7 +174,35 @@
   }
 
   /* ================= 페이지 이동 (음악이 끊기지 않게 본문만 교체) ================= */
-  const inits = { home: initHome, rsvp: initRsvp, program: initProgram, letters: initLetters, admin: initAdmin };
+  const inits = { home: initHome, rsvp: initRsvp, program: initProgram, letters: initLetters, admin: initAdmin, floor: initFloor };
+
+  function initFloor(main) {
+    const g = main.querySelector("#tables");
+    if (!g) return;
+    const houses = [
+      { name: "그리핀도르", color: "#8b1e1e", x: 145 },
+      { name: "후플푸프", color: "#c9a227", x: 265 },
+      { name: "래번클로", color: "#1e3a6b", x: 415 },
+      { name: "슬리데린", color: "#1f5a3a", x: 535 },
+    ];
+    const add = (tag, attrs, text) => {
+      const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
+      for (const k in attrs) n.setAttribute(k, attrs[k]);
+      if (text) n.textContent = text;
+      g.appendChild(n);
+    };
+    const tableY = 200, len = 160, w = 30;
+    for (const h of houses) {
+      add("path", { d: `M${h.x - 42} 156H${h.x + 42}V182L${h.x} 188L${h.x - 42} 182Z`, fill: h.color });
+      add("text", { x: h.x, y: 175, "text-anchor": "middle", "font-size": 13, "font-weight": 700, fill: h.color === "#c9a227" ? "#2a1d08" : "#f4e6c3" }, h.name);
+      for (let i = 0; i < 6; i++) {
+        const y = tableY + 10 + i * 25;
+        add("rect", { x: h.x - w / 2 - 14, y, width: 10, height: 14, rx: 2, fill: "#6b4a22", opacity: .55 });
+        add("rect", { x: h.x + w / 2 + 4, y, width: 10, height: 14, rx: 2, fill: "#6b4a22", opacity: .55 });
+      }
+      add("rect", { x: h.x - w / 2, y: tableY, width: w, height: len, rx: 3, fill: h.color, stroke: "#3a2a17", "stroke-width": 1 });
+    }
+  }
 
   function setActive(page) {
     $$(".nav a").forEach(a => a.classList.toggle("active", a.dataset.key === page));
