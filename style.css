@@ -89,8 +89,6 @@ body[data-page="letters"] .bg-img { background-image: var(--img-owl-moon); backg
   border-bottom: 1px solid rgba(228,204,150,.12);
 }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--serif); letter-spacing: .15em; color: var(--gold); font-size: 14px; white-space: nowrap; }
-.brand-seal { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 14px;
-  background: radial-gradient(circle at 35% 35%, #a83a40, var(--wax) 60%, #4a0f12); box-shadow: 0 2px 6px rgba(0,0,0,.5); }
 .nav { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
 .nav::-webkit-scrollbar { display: none; }
 .nav a { text-decoration: none; color: var(--muted); font-size: 14px; padding: 6px 14px; border-radius: 999px; white-space: nowrap; transition: .2s; }
