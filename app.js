@@ -301,8 +301,8 @@
   function initHome(main) {
     $("#inv-date", main).textContent = E.date;
     $("#inv-place", main).textContent = E.place;
-    $("#inv-cap", main).textContent = E.capacity ? `최대 ${E.capacity}명` : "";
-    if (!E.capacity) { $("#inv-cap", main).previousElementSibling.remove(); $("#inv-cap", main).remove(); }
+    $("#inv-cap", main).textContent = E.headcount || (E.capacity ? `최대 ${E.capacity}명` : "");
+    if (!E.headcount && !E.capacity) { $("#inv-cap", main).previousElementSibling.remove(); $("#inv-cap", main).remove(); }
     if (E.mapUrl) $("#inv-map", main).href = E.mapUrl; else $("#inv-map", main).remove();
 
     const env = $("#envelope", main);

@@ -3,7 +3,8 @@ window.EVENT = {
   date: "2026년 12월 26일 (토) 18:00 – 21:00",
   place: "더블랭크 (제주시 도남서길 22)",
   mapUrl: "https://place.map.kakao.com/404035026",
-  capacity: 50,   // 최대 수용 인원
+  capacity: 50,   // 최대 수용 인원 (참석 신청 마감 기준)
+  headcount: "40~50명",  // 초대장에 보이는 인원
   eventDay: "2026-12-26",  // 당일에는 프로그램 페이지에서 지금 순서를 표시
 
   // 배경음악 파일 (assets 폴더)
