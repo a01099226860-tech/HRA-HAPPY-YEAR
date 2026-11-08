@@ -228,7 +228,7 @@
     navigating = true;
     const main = $("#page");
     try {
-      const res = await fetch(url);
+      const res = await fetch(url, { cache: "no-cache" }); // 항상 최신 페이지 확인
       if (!res.ok) throw 0;
       const doc = new DOMParser().parseFromString(await res.text(), "text/html");
       const next = doc.querySelector("#page");
