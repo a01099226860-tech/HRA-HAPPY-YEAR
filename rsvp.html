@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=18" />
+  <link rel="stylesheet" href="style.css?v=19" />
 </head>
 <body data-page="rsvp">
   <div class="bg" aria-hidden="true"><div class="bg-img"></div><div class="mist"></div><div class="fx"></div></div>
@@ -43,8 +43,10 @@
             <legend>참석 여부</legend>
             <label class="pill"><input type="radio" name="attend" value="참석" required />참석</label>
             <label class="pill"><input type="radio" name="attend" value="불참" />불참</label>
-            <label class="pill"><input type="radio" name="attend" value="미정" />미정</label>
           </fieldset>
+          <label>연락처<input name="phone" type="tel" inputmode="numeric" required maxlength="13"
+            pattern="01[0-9]-?[0-9]{3,4}-?[0-9]{4}" placeholder="010-1234-5678"
+            title="휴대폰 번호를 010-1234-5678 형식으로 입력해주세요" /></label>
           <fieldset>
             <legend>세이렌의 멜로디 참여<small class="legend-hint">팀 대표가 마법 마이크로 노래해 노래방 점수로 승점을 겨루는 게임</small></legend>
             <label class="pill"><input type="radio" name="siren" value="참여" required />참여할래요</label>
@@ -78,8 +80,8 @@
   </div>
 
   <footer class="foot">Mischief Managed · HRA 2026 <span>· Photos: Unsplash · Icons: game-icons.net (CC BY 3.0)</span> <a href="admin.html" data-nav class="foot-admin">운영단 🔒</a></footer>
-  <script src="config.js?v=18"></script>
-  <script src="assets/crests.js?v=17"></script>
-  <script src="app.js?v=18"></script>
+  <script src="config.js?v=19"></script>
+  <script src="assets/crests.js?v=19"></script>
+  <script src="app.js?v=19"></script>
 </body>
 </html>

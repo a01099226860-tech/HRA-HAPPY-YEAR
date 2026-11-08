@@ -559,25 +559,24 @@
     const yes = rsvp.filter(r => r.attend === "참석");
     $("#admin-stats", main).innerHTML = `
       <div class="stat"><b>${yes.length}<small> / ${d.capacity || E.capacity}</small></b><small>참석</small></div>
-      <div class="stat"><b>${rsvp.filter(r => r.attend === "미정").length}</b><small>미정</small></div>
       <div class="stat"><b>${rsvp.filter(r => r.attend === "불참").length}</b><small>불참</small></div>
       <div class="stat"><b>${rsvp.filter(r => r.siren === "참여" && r.attend !== "불참").length}</b><small>세이렌 참여</small></div>
       <div class="stat"><b>${letters.length}</b><small>편지</small></div>`;
 
     const tb = $("#admin-table tbody", main);
     tb.innerHTML = "";
-    const order = { 참석: 0, 미정: 1, 불참: 2 };
-    rsvp.slice().sort((a, b) => (order[a.attend] ?? 3) - (order[b.attend] ?? 3)).forEach(r => {
+    const order = { 참석: 0, 불참: 1 };
+    rsvp.slice().sort((a, b) => (order[a.attend] ?? 2) - (order[b.attend] ?? 2)).forEach(r => {
       const tr = document.createElement("tr");
-      [r.name, r.role, r.attend, r.siren, HOUSES[r.house]?.name || "미배정", r.note].forEach(v => {
+      [r.name, r.role, r.attend, r.phone, r.siren, HOUSES[r.house]?.name || "미배정", r.note].forEach(v => {
         const td = document.createElement("td");
         td.textContent = v || "";
         tr.appendChild(td);
       });
-      if (HOUSES[r.house]) tr.children[4].style.color = HOUSES[r.house].pal[1];
+      if (HOUSES[r.house]) tr.children[5].style.color = HOUSES[r.house].pal[1];
       tb.appendChild(tr);
     });
-    if (!rsvp.length) tb.innerHTML = `<tr><td colspan="6" class="empty">아직 회신이 없어요.</td></tr>`;
+    if (!rsvp.length) tb.innerHTML = `<tr><td colspan="7" class="empty">아직 회신이 없어요.</td></tr>`;
 
     const wall = $("#letter-wall", main);
     wall.innerHTML = "";

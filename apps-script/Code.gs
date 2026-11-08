@@ -8,10 +8,12 @@
 const ADMIN_KEY = "여기에-운영단-비밀번호";
 const CAPACITY = 50; // 최대 참석 인원
 const ANON = "익명의 마법사";
+// 참석 회신은 이 구글 시트("HRA 송년회 인원 참석 여부")에 저장. 롤링페이퍼는 스크립트가 붙은 원래 시트에 그대로 저장.
+const RSVP_SHEET_ID = "18mA-Q6L7MW9pzHFzF8cF4VNpJud8MkGL77lPjnoLDlw";
 
 const SHEETS = {
-  rsvp: { name: "참석자", cols: ["time", "name", "role", "attend", "siren", "house", "note"],
-          head: ["제출시각", "이름", "구분", "참석", "세이렌", "기숙사", "한마디"] },
+  rsvp: { name: "참석자", cols: ["time", "name", "role", "attend", "phone", "siren", "house", "note"],
+          head: ["제출시각", "이름", "구분", "참석", "연락처", "세이렌", "기숙사", "한마디"] },
   // 편지 비밀번호는 원문을 저장하지 않고 암호화(해시)해서 저장
   letters: { name: "롤링페이퍼", cols: ["time", "from", "message", "id", "pwhash", "edited"],
           head: ["제출시각", "보낸사람", "내용", "편지번호", "비번(암호화)", "수정시각"] },
@@ -23,12 +25,17 @@ const HOUSE_KEY = { 그리핀도르: "g", 후플푸프: "h", 래번클로: "r", 
 function sheetFor(kind) {
   const def = SHEETS[kind];
   if (!def) throw new Error("unknown kind");
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = kind === "rsvp" ? SpreadsheetApp.openById(RSVP_SHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
   let sh = ss.getSheetByName(def.name);
   if (!sh) {
-    sh = ss.insertSheet(def.name);
+    // 비어 있는 첫 탭(예: "시트1")이 있으면 이름만 바꿔서 사용
+    const first = ss.getSheets()[0];
+    if (first && first.getLastRow() === 0) first.setName(def.name), sh = first;
+    else sh = ss.insertSheet(def.name);
     sh.setFrozenRows(1);
   }
+  // 연락처 칸은 글자로 저장 (앞자리 0이 지워지지 않게)
+  if (kind === "rsvp") sh.getRange(1, def.cols.indexOf("phone") + 1, sh.getMaxRows(), 1).setNumberFormat("@");
   // 예전 버전의 "편지지" 칸이 남아 있으면 칸째로 지움 (편지 색은 한 가지로 통일)
   if (kind === "letters" && sh.getLastColumn() > 0) {
     const old = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0].indexOf("편지지");
@@ -57,6 +64,13 @@ function rowsOf(kind) {
 
 function json(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
+
+// 휴대폰 번호를 010-1234-5678 모양으로 맞춤. 번호가 아니면 빈 값
+function formatPhone(v) {
+  const n = String(v == null ? "" : v).replace(/\D/g, "");
+  const m = n.match(/^(01\d)(\d{3,4})(\d{4})$/);
+  return m ? m[1] + "-" + m[2] + "-" + m[3] : "";
 }
 
 function clean(v, max) { return String(v == null ? "" : v).replace(/^[=+\-@]/, "'$&").slice(0, max); }
@@ -137,9 +151,12 @@ function doPost(e) {
     const row = def.cols.map(c => {
       if (c === "time") return new Date();
       if (c === "house") return HOUSE_KO[d.house] || "";
+      if (c === "phone") return formatPhone(d.phone);
       return clean(d[c], 60);
     });
     if (!row[1]) return json({ ok: false, error: "이름이 필요합니다" });
+    if (!row[def.cols.indexOf("phone")]) return json({ ok: false, error: "연락처를 확인해주세요" });
+    if (!["참석", "불참"].includes(row[def.cols.indexOf("attend")])) return json({ ok: false, error: "참석 여부를 골라주세요" });
     const data = sh.getDataRange().getValues();
     const ni = def.cols.indexOf("name"), ai = def.cols.indexOf("attend"), hi = def.cols.indexOf("house");
     const idx = data.findIndex((r, i) => i > 0 && String(r[ni]) === row[ni]);
