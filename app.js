@@ -305,35 +305,21 @@
     if (!E.headcount && !E.capacity) { $("#inv-cap", main).previousElementSibling.remove(); $("#inv-cap", main).remove(); }
     if (E.mapUrl) $("#inv-map", main).href = E.mapUrl; else $("#inv-map", main).remove();
 
-    // 양면 양피지: 앞면 초대장, 뒷면 참석 회신 (보이지 않는 면은 inert로 탭 이동에서 제외)
-    const sheet = $("#letter", main), front = $("#sheet-front", main), back = $("#sheet-back", main);
-    const inner = $(".sheet-inner", main);
-    const fit = () => { inner.style.height = (sheet.classList.contains("flipped") ? back : front).offsetHeight + "px"; };
-    new ResizeObserver(fit).observe(front);
-    new ResizeObserver(fit).observe(back);
-    const turn = (toBack, scroll) => {
-      sheet.classList.toggle("flipped", toBack);
-      front.inert = toBack; back.inert = !toBack;
-      fit();
-      if (scroll) sheet.scrollIntoView({ behavior: "smooth", block: "start" });
-      if (toBack && scroll) setTimeout(() => back.querySelector("input[name=name]").focus({ preventScroll: true }), 900);
-    };
-    $$("[data-turn]", main).forEach(b => b.addEventListener("click", () => turn(b.dataset.turn === "back", true)));
+    // 펼친 책자: 왼쪽 장 초대장, 오른쪽 장 참석 회신
+    const book = $("#letter", main);
     const wantRsvp = location.hash === "#rsvp"; // 예전 '참석 신청' 주소로 들어온 경우
-    turn(wantRsvp, false);
     initRsvp(main);
 
     const env = $("#envelope", main);
     const reveal = () => {
       env.classList.add("gone");
       $("#tap-hint", main).classList.add("gone");
-      sheet.hidden = false;
+      book.hidden = false;
       $("#doors", main).hidden = false;
-      fit();
     };
     if (store.get("opened") || wantRsvp) {
       reveal();
-      if (wantRsvp) setTimeout(() => sheet.scrollIntoView({ block: "start" }), 50);
+      if (wantRsvp) setTimeout(() => $("#rsvp", main).scrollIntoView({ block: "start", behavior: "instant" }), 50);
       return;
     }
     const open = () => {

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=21" />
+  <link rel="stylesheet" href="style.css?v=22" />
 </head>
 <body data-page="home">
   <div class="bg" aria-hidden="true"><div class="bg-img"></div><div class="mist"></div><div class="fx"></div></div>
@@ -42,10 +42,10 @@
       </div>
       <p class="tap-hint" id="tap-hint">✦ 봉인을 눌러 초대장을 열어보세요 · 음악이 함께 시작돼요 ♪</p>
 
-      <!-- 양면 양피지: 앞면 초대장, 뒷면 참석 회신 -->
-      <div class="sheet" id="letter" hidden>
-        <div class="sheet-inner">
-          <article class="letter sheet-front" id="sheet-front">
+      <!-- 펼친 책자: 왼쪽 장 초대장, 오른쪽 장 참석 회신 (휴대폰에서는 위아래) -->
+      <div class="book" id="letter" hidden>
+        <div class="book-spread">
+          <article class="letter book-page book-left">
             <p class="letter-head">HOGWARTS SCHOOL of HRA</p>
             <p class="letter-title">송년회 초대장</p>
             <p>친애하는 <b>HRA 여러분</b>과 <b>교수님</b>께,</p>
@@ -57,10 +57,9 @@
               <dt>준비물</dt><dd>웃는 얼굴, 그리고 노래 한 소절</dd>
             </dl>
             <p class="sign">부엉이 우편으로 회신 바랍니다.<br /><span>— HRA 송년회 준비위원회</span></p>
-            <button class="btn gold sheet-turn" type="button" data-turn="back">양피지를 뒤집어 회신 쓰기 ↻</button>
           </article>
 
-          <article class="letter sheet-back" id="sheet-back">
+          <article class="letter book-page book-right" id="rsvp">
             <p class="letter-head">OWL POST · REPLY</p>
             <p class="letter-title">부엉이 회신</p>
             <p class="back-lead">참석 여부와 세이렌의 멜로디 참여를 알려주세요.</p>
@@ -90,7 +89,6 @@
               <button class="btn gold" type="submit">회신 보내기</button>
               <p class="form-msg" id="rsvp-msg"></p>
             </form>
-            <button class="btn ghost sheet-turn" type="button" data-turn="front">↺ 초대장 다시 보기</button>
           </article>
         </div>
       </div>
@@ -138,8 +136,8 @@
   </div>
 
   <footer class="foot">Mischief Managed · HRA 2026 <span>· Photos: Unsplash · Icons: game-icons.net (CC BY 3.0)</span> <a href="admin.html" data-nav class="foot-admin">운영단 🔒</a></footer>
-  <script src="config.js?v=21"></script>
-  <script src="assets/crests.js?v=21"></script>
-  <script src="app.js?v=21"></script>
+  <script src="config.js?v=22"></script>
+  <script src="assets/crests.js?v=22"></script>
+  <script src="app.js?v=22"></script>
 </body>
 </html>
