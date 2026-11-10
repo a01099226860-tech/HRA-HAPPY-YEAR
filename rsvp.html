@@ -4,84 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HRA 2026 송년회 · 참석 신청</title>
-  <meta name="description" content="HRA 송년회에 초대합니다. 2026년 12월 26일 제주 더블랭크." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20" />
+  <!-- 참석 신청은 초대장 뒷면으로 합쳐졌어요. 예전 주소로 들어오면 그쪽으로 보냅니다. -->
+  <meta http-equiv="refresh" content="0; url=./#rsvp" />
+  <script>location.replace("./#rsvp");</script>
+  <style>body { background: #070d16; color: #f1e6cb; font-family: sans-serif; text-align: center; padding: 60px 16px; }</style>
 </head>
-<body data-page="rsvp">
-  <div class="bg" aria-hidden="true"><div class="bg-img"></div><div class="mist"></div><div class="fx"></div></div>
-
-  <header class="topbar">
-    <a href="./" class="brand" data-nav><span>HRA 2026</span></a>
-    <nav class="nav">
-      <a href="./" data-nav data-key="home">초대장</a>
-      <a href="rsvp.html" data-nav data-key="rsvp">참석 신청</a>
-      <a href="program.html" data-nav data-key="program">프로그램</a>
-      <a href="floor.html" data-nav data-key="floor">안내도</a>
-      <a href="letters.html" data-nav data-key="letters">롤링페이퍼</a>
-    </nav>
-  </header>
-
-  <main id="page" data-page="rsvp" data-title="HRA 2026 송년회 · 참석 신청">
-    <section class="page-hero">
-      <p class="eyebrow">THE GREAT HALL</p>
-      <h1 class="page-title">대연회장</h1>
-      <p class="lead">참석 여부와 세이렌의 멜로디 참여를 부엉이 편으로 알려주세요.</p>
-    </section>
-
-    <div class="two-col">
-      <div class="card parchment">
-        <h2>부엉이 회신</h2>
-        <form id="rsvp-form" autocomplete="off">
-          <label>이름<input name="name" required maxlength="20" placeholder="해리 포터" /></label>
-          <label>구분
-            <select name="role"><option>HRA</option><option>교수님</option><option>기타</option></select>
-          </label>
-          <fieldset>
-            <legend>참석 여부</legend>
-            <label class="pill"><input type="radio" name="attend" value="참석" required />참석</label>
-            <label class="pill"><input type="radio" name="attend" value="불참" />불참</label>
-          </fieldset>
-          <label>연락처<input name="phone" type="tel" inputmode="numeric" required maxlength="13"
-            pattern="01[0-9]-?[0-9]{3,4}-?[0-9]{4}" placeholder="010-1234-5678"
-            title="휴대폰 번호를 010-1234-5678 형식으로 입력해주세요" /></label>
-          <fieldset>
-            <legend>세이렌의 멜로디 참여<small class="legend-hint">팀 대표가 마법 마이크로 노래해 노래방 점수로 승점을 겨루는 게임</small></legend>
-            <label class="pill"><input type="radio" name="siren" value="참여" required />참여할래요</label>
-            <label class="pill"><input type="radio" name="siren" value="관람" />관람만</label>
-          </fieldset>
-          <div class="assign-note">
-            <b>기숙사 배정</b>
-            <p>기숙사는 직접 고르지 않아요. 준비위원회가 네 기숙사 중 한 곳으로 <b>랜덤 배정</b>하고, 결과는 송년회 당일 공개됩니다.</p>
-          </div>
-          <label>한마디 (선택)<input name="note" maxlength="60" placeholder="기대돼요!" /></label>
-          <button class="btn gold" type="submit">회신 보내기</button>
-          <p class="form-msg" id="rsvp-msg"></p>
-        </form>
-      </div>
-
-      <div class="card glass">
-        <h2>오늘 밤의 연회장</h2>
-        <div class="stats" id="rsvp-stats"><p class="empty">부엉이들을 불러오는 중...</p></div>
-        <p class="crest-head">네 개의 기숙사 · 이 중 한 곳으로 배정돼요</p>
-        <div class="crest-row" data-crests></div>
-        <p class="private-note">🔒 참석자 명단은 운영단만 볼 수 있어요.</p>
-      </div>
-    </div>
-  </main>
-
-  <div class="music" id="music">
-    <button class="music-btn" id="music-btn" type="button" aria-label="배경음악 켜기/끄기">
-      <span class="eq"><i></i><i></i><i></i></span><span class="music-label">BGM 켜기</span>
-    </button>
-    <audio id="bgm" loop preload="metadata"></audio>
-  </div>
-
-  <footer class="foot">Mischief Managed · HRA 2026 <span>· Photos: Unsplash · Icons: game-icons.net (CC BY 3.0)</span> <a href="admin.html" data-nav class="foot-admin">운영단 🔒</a></footer>
-  <script src="config.js?v=20"></script>
-  <script src="assets/crests.js?v=20"></script>
-  <script src="app.js?v=20"></script>
+<body>
+  <p>참석 신청은 초대장 뒷면으로 옮겨졌어요. <a href="./#rsvp" style="color:#e4cc96">여기를 눌러 이동</a>하세요.</p>
 </body>
 </html>

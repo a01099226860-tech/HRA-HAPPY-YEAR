@@ -244,6 +244,27 @@ legend { font-weight: 700; font-size: 14px; margin-bottom: 6px; width: 100%; }
 .sign { font-size: 14px; }
 .sign span { color: #7a6544; }
 
+/* 양면 양피지: 앞면 초대장 ↔ 뒷면 회신 */
+.sheet { width: min(580px, 100%); margin: 10px 0 0; perspective: 1800px; scroll-margin-top: 80px;
+  animation: rise .9s cubic-bezier(.2,.8,.2,1); }
+.sheet[hidden] { display: none; }
+/* 높이는 보이는 면에 맞춰 app.js가 정함 */
+.sheet-inner { position: relative; transform-style: preserve-3d;
+  transition: transform .9s cubic-bezier(.3,.7,.25,1), height .6s ease; }
+.sheet.flipped .sheet-inner { transform: rotateY(180deg); }
+.sheet .letter { position: absolute; top: 0; left: 0; width: 100%; margin: 0; animation: none;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.sheet-back { transform: rotateY(180deg); }
+.sheet-back form { text-align: left; margin-top: 18px; }
+.sheet-back .back-lead { font-size: 15px; }
+.sheet-turn { margin-top: 8px; }
+.sheet-back .sheet-turn { margin-top: 18px; }
+
+/* 오늘 밤의 연회장 (참석 현황) */
+.hall-card { max-width: 580px; margin: 48px auto 50px; text-align: center; }
+.hall-card .eyebrow { margin-bottom: 4px; }
+.hall-card .stats { margin-bottom: 10px; }
+
 /* 문 3개 */
 .doors[hidden] { display: none; }
 .doors { animation: rise .9s ease; }
