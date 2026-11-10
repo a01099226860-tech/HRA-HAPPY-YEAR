@@ -359,6 +359,7 @@
   }
 
   async function loadRsvp(main) {
+    if (!$("#rsvp-stats", main)) return; // 현황 카드가 없는 페이지
     let s;
     try { s = await api.summary("rsvp"); }
     catch { $("#rsvp-stats", main).innerHTML = `<p class="empty">현황을 불러오지 못했어요.</p>`; return; }
