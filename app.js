@@ -664,6 +664,9 @@
       box.classList.add("out");
       document.body.classList.remove("intro-on");
       setTimeout(() => box.remove(), 800);
+      // 예전 '참석 신청' 링크로 들어왔으면 영상이 끝난 뒤 회신서로 이동
+      const r = location.hash === "#rsvp" && $("#rsvp");
+      if (r) r.scrollIntoView({ block: "start", behavior: "instant" });
     };
     const play = () => v.play().then(() => { playBtn.hidden = true; }).catch(() => { playBtn.hidden = false; });
     v.addEventListener("ended", close);

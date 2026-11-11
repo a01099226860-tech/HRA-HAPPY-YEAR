@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=24" />
+  <link rel="stylesheet" href="style.css?v=25" />
 </head>
 <body data-page="home">
   <!-- 처음 접속 시 인트로 영상 (한 번 본 뒤에는 같은 창에서 다시 나오지 않음) -->
@@ -22,7 +22,7 @@
   </div>
   <script>
     try {
-      if (sessionStorage.getItem("intro-seen") || location.hash === "#rsvp") document.getElementById("intro").remove();
+      if (sessionStorage.getItem("intro-seen")) document.getElementById("intro").remove();
       else document.body.classList.add("intro-on");
     } catch (e) { document.body.classList.add("intro-on"); }
   </script>
@@ -144,8 +144,8 @@
   </div>
 
   <footer class="foot">Mischief Managed · HRA 2026 <span>· Photos: Unsplash · Icons: game-icons.net (CC BY 3.0)</span> <a href="admin.html" data-nav class="foot-admin">운영단 🔒</a></footer>
-  <script src="config.js?v=24"></script>
-  <script src="assets/crests.js?v=24"></script>
-  <script src="app.js?v=24"></script>
+  <script src="config.js?v=25"></script>
+  <script src="assets/crests.js?v=25"></script>
+  <script src="app.js?v=25"></script>
 </body>
 </html>
