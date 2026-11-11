@@ -649,5 +649,35 @@
     setTimeout(() => window.print(), 300); // 글꼴·그림이 그려질 시간
   }
 
+  /* ================= 첫 접속 인트로 영상 ================= */
+  // 브라우저 정책상 소리 없이만 자동재생 가능 → '소리 켜기' 버튼 제공
+  function initIntro() {
+    const box = $("#intro");
+    if (!box) return;
+    const v = $("#intro-video"), playBtn = $("#intro-play"), soundBtn = $("#intro-sound");
+    let closed = false;
+    const close = () => {
+      if (closed) return;
+      closed = true;
+      store.set("intro-seen", "1");
+      v.pause();
+      box.classList.add("out");
+      document.body.classList.remove("intro-on");
+      setTimeout(() => box.remove(), 800);
+    };
+    const play = () => v.play().then(() => { playBtn.hidden = true; }).catch(() => { playBtn.hidden = false; });
+    v.addEventListener("ended", close);
+    v.addEventListener("error", close); // 영상을 못 불러오면 바로 사이트로
+    $("#intro-skip").addEventListener("click", close);
+    playBtn.addEventListener("click", play);
+    soundBtn.addEventListener("click", () => {
+      v.muted = !v.muted;
+      soundBtn.textContent = v.muted ? "🔊 소리 켜기" : "🔇 소리 끄기";
+      if (v.paused) play();
+    });
+    play();
+  }
+
+  initIntro();
   startPage();
 })();
