@@ -654,13 +654,23 @@
   function initIntro() {
     const box = $("#intro");
     if (!box) return;
-    const v = $("#intro-video"), playBtn = $("#intro-play"), soundBtn = $("#intro-sound");
-    let closed = false;
+    // 영상 자체 소리는 쓰지 않고(항상 음소거), 배경음은 따로 넣은 음원(intro-audio)을 영상에 맞춰 재생
+    const v = $("#intro-video"), a = $("#intro-audio"), playBtn = $("#intro-play"), soundBtn = $("#intro-sound");
+    let closed = false, soundOn = false;
+    const syncAudio = () => {
+      if (!a || !soundOn || v.paused) { a && a.pause(); return; }
+      if (Math.abs(a.currentTime - v.currentTime) > 0.3) a.currentTime = v.currentTime;
+      a.play().catch(() => {});
+    };
+    v.addEventListener("play", syncAudio);
+    v.addEventListener("pause", syncAudio);
+    v.addEventListener("seeked", syncAudio);
     const close = () => {
       if (closed) return;
       closed = true;
       store.set("intro-seen", "1");
       v.pause();
+      if (a) a.pause();
       box.classList.add("out");
       document.body.classList.remove("intro-on");
       setTimeout(() => box.remove(), 800);
@@ -674,9 +684,9 @@
     $("#intro-skip").addEventListener("click", close);
     playBtn.addEventListener("click", play);
     soundBtn.addEventListener("click", () => {
-      v.muted = !v.muted;
-      soundBtn.textContent = v.muted ? "🔊 소리 켜기" : "🔇 소리 끄기";
-      if (v.paused) play();
+      soundOn = !soundOn;
+      soundBtn.textContent = soundOn ? "🔇 소리 끄기" : "🔊 소리 켜기";
+      if (v.paused) play(); else syncAudio();
     });
     play();
   }
