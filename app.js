@@ -650,18 +650,23 @@
   }
 
   /* ================= 첫 접속 인트로 영상 ================= */
-  // 브라우저 정책상 소리 없이만 자동재생 가능 → '소리 켜기' 버튼 제공
+  // 소리와 함께 자동재생을 먼저 시도하고, 브라우저 정책으로 막히면 첫 터치/클릭에 소리를 켠다
   function initIntro() {
     const box = $("#intro");
     if (!box) return;
     // 영상 자체 소리는 쓰지 않고(항상 음소거), 배경음은 따로 넣은 음원(intro-audio)을 영상에 맞춰 재생
     const v = $("#intro-video"), a = $("#intro-audio"), playBtn = $("#intro-play"), soundBtn = $("#intro-sound");
-    let closed = false, soundOn = false;
+    // 소리는 기본으로 켜 둔다. 브라우저가 막으면(blocked) 화면을 처음 누르는 순간 바로 켠다.
+    let closed = false, soundOn = true, blocked = false;
+    const label = () => { soundBtn.textContent = soundOn && !blocked ? "🔇 소리 끄기" : "🔊 소리 켜기"; };
     const syncAudio = () => {
       if (!a || !soundOn || v.paused) { a && a.pause(); return; }
       if (Math.abs(a.currentTime - v.currentTime) > 0.3) a.currentTime = v.currentTime;
-      a.play().catch(() => {});
+      a.play().then(() => { blocked = false; label(); })
+        .catch((e) => { if (e && e.name === "NotAllowedError") { blocked = true; label(); } });
     };
+    const unlock = () => { if (!closed && blocked && soundOn) syncAudio(); };
+    ["click", "touchend", "keydown"].forEach((t) => document.addEventListener(t, unlock, true));
     v.addEventListener("play", syncAudio);
     v.addEventListener("pause", syncAudio);
     v.addEventListener("seeked", syncAudio);
@@ -684,10 +689,12 @@
     $("#intro-skip").addEventListener("click", close);
     playBtn.addEventListener("click", play);
     soundBtn.addEventListener("click", () => {
-      soundOn = !soundOn;
-      soundBtn.textContent = soundOn ? "🔇 소리 끄기" : "🔊 소리 켜기";
+      if (blocked) soundOn = true; // 막혀 있던 상태에서 누르면 켜기
+      else soundOn = !soundOn;
+      label();
       if (v.paused) play(); else syncAudio();
     });
+    label();
     play();
   }
 
