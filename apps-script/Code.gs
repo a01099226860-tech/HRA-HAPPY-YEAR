@@ -8,8 +8,7 @@
 const ADMIN_KEY = "여기에-운영단-비밀번호";
 const CAPACITY = 50; // 최대 참석 인원
 const ANON = "익명의 마법사";
-// 참석 회신은 이 구글 시트("HRA 송년회 인원 참석 여부")에 저장. 롤링페이퍼는 스크립트가 붙은 원래 시트에 그대로 저장.
-const RSVP_SHEET_ID = "18mA-Q6L7MW9pzHFzF8cF4VNpJud8MkGL77lPjnoLDlw";
+// 참석 회신과 롤링페이퍼 모두 스크립트가 붙은 원래 시트("HRA 송년회")의 "참석자" / "롤링페이퍼" 탭에 저장.
 
 const SHEETS = {
   rsvp: { name: "참석자", cols: ["time", "name", "role", "attend", "phone", "siren", "house", "note"],
@@ -25,7 +24,7 @@ const HOUSE_KEY = { 그리핀도르: "g", 후플푸프: "h", 래번클로: "r", 
 function sheetFor(kind) {
   const def = SHEETS[kind];
   if (!def) throw new Error("unknown kind");
-  const ss = kind === "rsvp" ? SpreadsheetApp.openById(RSVP_SHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sh = ss.getSheetByName(def.name);
   if (!sh) {
     // 비어 있는 첫 탭(예: "시트1")이 있으면 이름만 바꿔서 사용
@@ -33,6 +32,11 @@ function sheetFor(kind) {
     if (first && first.getLastRow() === 0) first.setName(def.name), sh = first;
     else sh = ss.insertSheet(def.name);
     sh.setFrozenRows(1);
+  }
+  // 예전 "참석자" 탭(연락처 칸 없음)이면 세이렌 앞에 연락처 칸을 끼워 넣어 기존 줄이 밀리지 않게
+  if (kind === "rsvp" && sh.getLastColumn() > 0) {
+    const h = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
+    if (h.indexOf("연락처") < 0 && h.indexOf("세이렌") >= 0) sh.insertColumnBefore(h.indexOf("세이렌") + 1);
   }
   // 연락처 칸은 글자로 저장 (앞자리 0이 지워지지 않게)
   if (kind === "rsvp") sh.getRange(1, def.cols.indexOf("phone") + 1, sh.getMaxRows(), 1).setNumberFormat("@");
