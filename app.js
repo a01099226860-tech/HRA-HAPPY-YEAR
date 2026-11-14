@@ -531,6 +531,7 @@
   function initAdmin(main) {
     const form = $("#admin-form", main), msg = $("#admin-msg", main);
     if (E.sheetUrl) $("#admin-sheet", main).href = E.sheetUrl; else $("#admin-sheet", main).remove();
+    if (E.letterSheetUrl) $("#admin-letter-sheet", main).href = E.letterSheetUrl; else $("#admin-letter-sheet", main).remove();
     const show = d => {
       form.hidden = true;
       $("#admin-body", main).hidden = false;
