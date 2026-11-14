@@ -12,7 +12,7 @@ window.EVENT = {
 
   // 운영단 전용: 구글 시트 (공유된 사람만 열 수 있음)
   sheetUrl: "https://docs.google.com/spreadsheets/d/18mA-Q6L7MW9pzHFzF8cF4VNpJud8MkGL77lPjnoLDlw/edit",       // 참석자
-  letterSheetUrl: "https://docs.google.com/spreadsheets/d/19R82lNCL_yarcXprEpWWMctzDi5BW3yyq1pB-lmpy3M/edit", // 롤링페이퍼
+  letterSheetUrl: "https://docs.google.com/spreadsheets/d/19R82lNCL_yarcXprEpWWMctzDi5BW3yyq1pB-lmpy3M/edit?gid=523385600#gid=523385600", // 롤링페이퍼
 
   // 구글 Apps Script 웹앱 URL (README 참고). 비워두면 체험 모드(이 브라우저에만 저장).
   scriptUrl: "https://script.google.com/macros/s/AKfycbzS5THGLQ4PDAvH_3PEVCpxnoWR3oDALgQEy1mKEStqMXOLBZFXREVKmdKvW9-kX8Xw/exec",
